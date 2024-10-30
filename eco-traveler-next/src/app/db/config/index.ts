@@ -1,18 +1,17 @@
-import { MongoClient } from "mongodb";
+import { Db, MongoClient } from "mongodb";
+const connectionsString = process.env.MONGODB_CONNECTION_STRING;
 
-const connectionString = process.env.MONGODB_CONNECTION_STRING;
-
-if (!connectionString) {
-    throw new Error("MONGODB_CONNECTION_STRING is not defined");   
+if (!connectionsString) {
+  throw new Error("MONGODB_CONNECTION_STRING is  not defined");
 }
 
 let client: MongoClient;
-
-export const getMongoClientInstance = async () => {
-    if (!client) {
-        client = await MongoClient.connect(connectionString);
-        await client.connect();
-    }
-
-    return client;
-}
+let db: Db;
+export const getDb = async () => {
+  if (!client) {
+    client = await MongoClient.connect(connectionsString);
+    await client.connect();
+    db = client.db("eco-traveler");
+  }
+  return db;
+};

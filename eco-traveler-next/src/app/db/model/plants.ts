@@ -7,7 +7,7 @@ export type destination = {
   description: string;
 };
 
-export type tranportasion = {
+export type transportation = {
   type: string;
   description: string;
   price: number;
@@ -19,27 +19,46 @@ export type hotel = {
   rating: number;
   price: number;
 };
-// const OpenAI = require("openai");
 
+export type aiResult = {
+  destination: string[];
+  transportation: string[];
+  hotel: string[];
+};
 export type plan = {
   _id: ObjectId;
   userId: ObjectId;
   name: string;
-  destination?: destination[];
-  hotel?: hotel[];
-  transportation?: tranportasion[];
+  budget: number;
+  destination?: string[];
+  hotel?: string[];
+  transportation?: string[];
+  duration: string;
+  startDate: string;
+  endDate: string;
+};
+export type resultInputPlan = Omit<plan, "_id">;
+
+export type inputPlan = {
+  userId: string; // Use string here for incoming data
+  name: string;
+  budget: number;
+  destination?: string[];
+  hotel?: string[];
+  transportation?: string[];
   duration: string;
   startDate: string;
   endDate: string;
 };
 
-export type inputPlan = Omit<plan, "_id">;
+// Function to get the Plan collection
 export const getPlans = async () => {
   const db = await getDb();
-  const Plan = await db.collection("Plan");
+  const Plan = db.collection("Plan");
   return Plan;
 };
-export async function generateAi() {
+
+export async function generateAi(): Promise<aiResult> {
   const openai = new OpenAI();
   const completion = await openai.chat.completions.create({
     model: "gpt-4o-mini",
@@ -48,18 +67,26 @@ export async function generateAi() {
       {
         role: "user",
         content:
-          " give me recomendation of place ,hotel and transpotasion in bogor with duration 5 day,  in json format which have properyty: destination[{name,description}],hotel[{name,description,rating,price}],tranportasion[{type,description,price}], without opening sentence just give me the json format that i can parse into an object and without ``` this",
+          "Give me recommendations of places, hotels, and transportation in Bogor for a 5-day trip, in JSON format with properties: destination[{name, description}], hotel[{name, description, rating, price}], transportation[{type, description, price}]. Only provide JSON format without any introductory text or code formatting.",
       },
     ],
   });
 
-  console.log(completion.choices[0].message);
-  const text: any = completion.choices[0].message.content;
-  const result: any = JSON.parse(text);
+  const text = completion.choices[0].message.content ?? "";
+  const result = JSON.parse(text);
   return result;
 }
+
 export const createPlan = async (plan: inputPlan) => {
+  const modifierPlan: resultInputPlan = {
+    ...plan,
+    userId: new ObjectId(plan.userId),
+
+    // Convert userId to ObjectId
+  };
+  console.log(modifierPlan);
+
   const Plan = await getPlans();
-  const result = await Plan.insertOne(plan);
+  const result = await Plan.insertOne(modifierPlan); // Use modifierPlan here
   return result;
 };

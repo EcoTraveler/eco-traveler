@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
-const openai = new OpenAI();
+// Inisialisasi OpenAI client
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY, // Pastikan ini diatur di environment variables
+});
 
 export async function POST(req: Request) {
   try {
@@ -22,9 +25,7 @@ export async function POST(req: Request) {
     });
 
     // Parse the AI response as JSON
-    const recommendations = JSON.parse(
-      completion.choices[0].message.content || "{}"
-    );
+    const recommendations = JSON.parse(completion.choices[0].message.content || "{}");
 
     return NextResponse.json(recommendations);
   } catch (error) {

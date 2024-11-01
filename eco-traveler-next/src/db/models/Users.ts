@@ -7,14 +7,24 @@ const userSchema = z.object({
   username: z.string({ message: "username is required" }),
   email: z.string().email(),
   password: z.string().min(5),
+  imgUrl: z
+    .string()
+    .default(
+      "https://placehold.co/200x/ffa8e4/ffffff.svg?text=%CA%95%E2%80%A2%CC%81%E1%B4%A5%E2%80%A2%CC%80%CA%94&font=Lato"
+    ),
+  token: z.number().default(5),
 });
 type UserType = z.infer<typeof userSchema>;
 class User {
+  static userSchema = userSchema;
   static collection() {
     return database.collection<UserType>("Users");
   }
   static async register(input: UserType) {
-    userSchema.parse(input);
+    const validation = this.userSchema.safeParse(input);
+    if (!validation.success) {
+      throw new z.ZodError(validation.error.issues);
+    }
     const exituser = await this.collection().findOne({
       $or: [{ username: input.username }, { email: input.email }],
     });

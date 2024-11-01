@@ -7,6 +7,9 @@ export async function POST(req: Request) {
   try {
     const data = await req.json();
     const { destination, duration, budget } = data;
+    if (!destination || !budget) {
+      throw new Error("Input all field to get recomendation");
+    }
     const completion = await openai.chat.completions.create({
       model: "gpt-4",
       messages: [
@@ -25,10 +28,11 @@ export async function POST(req: Request) {
 
     return NextResponse.json(recommendations);
   } catch (error) {
+    const err = error as Error;
     console.error("Error:", error);
     return NextResponse.json({
       status: 500,
-      message: "failed fech daata",
+      message: err.message,
     });
   }
 }

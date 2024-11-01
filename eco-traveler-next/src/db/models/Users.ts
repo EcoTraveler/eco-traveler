@@ -1,10 +1,12 @@
 import { z } from "zod";
 import { database } from "../config";
 import { hashText } from "../utils/bcrypt";
+import { ObjectId } from "mongodb";
 
 const userSchema = z.object({
+  // _id: z.string().optional(),
   name: z.string(),
-  username: z.string({ message: "username is required" }),
+  username: z.string({ required_error: "Username is required" }),
   email: z.string().email(),
   password: z.string().min(5),
   imgUrl: z
@@ -15,11 +17,13 @@ const userSchema = z.object({
   token: z.number().default(5),
 });
 type UserType = z.infer<typeof userSchema>;
+
 class User {
   static userSchema = userSchema;
   static collection() {
     return database.collection<UserType>("Users");
   }
+
   static async register(input: UserType) {
     const validation = this.userSchema.safeParse(input);
     if (!validation.success) {
@@ -34,5 +38,7 @@ class User {
     const register = await this.collection().insertOne(input);
     return register;
   }
+
 }
+
 export default User;

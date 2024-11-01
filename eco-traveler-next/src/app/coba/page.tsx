@@ -105,7 +105,6 @@ export default function TravelForm() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full p-2 border rounded-md"
-              required
             />
           </div>
           <div>
@@ -117,7 +116,6 @@ export default function TravelForm() {
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
               className="w-full p-2 border rounded-md"
-              required
             />
           </div>
           <div>
@@ -130,7 +128,6 @@ export default function TravelForm() {
               onChange={(e) => setDuration(parseInt(e.target.value))}
               min={1}
               className="w-full p-2 border rounded-md"
-              required
             />
           </div>
           <div>
@@ -141,7 +138,6 @@ export default function TravelForm() {
               onChange={(e) => setBudget(e.target.value)}
               min={1}
               className="w-full p-2 border rounded-md"
-              required
             />
           </div>
           <div>
@@ -152,7 +148,6 @@ export default function TravelForm() {
               onChange={(e) => setStartDate(e.target.value)}
               min={1}
               className="w-full p-2 border rounded-md"
-              required
             />
           </div>
           <div>
@@ -163,7 +158,6 @@ export default function TravelForm() {
               onChange={(e) => setEndDate(e.target.value)}
               min={1}
               className="w-full p-2 border rounded-md"
-              required
             />
           </div>
           <button
@@ -187,7 +181,7 @@ export default function TravelForm() {
           <section>
             <h2 className="text-xl font-bold mb-4">Places to Visit</h2>
             <div className="grid gap-4">
-              {recommendations.destination.map((place, index) => (
+              {recommendations?.destination?.map((place, index) => (
                 <div key={index} className="p-4 border rounded-md">
                   <h3 className="font-semibold">{place.name}</h3>
                   <p className="text-gray-600">{place.description}</p>
@@ -199,7 +193,7 @@ export default function TravelForm() {
           <section>
             <h2 className="text-xl font-bold mb-4">Hotels</h2>
             <div className="grid gap-4">
-              {recommendations.hotel.map((hotel, index) => (
+              {recommendations?.hotel?.map((hotel, index) => (
                 <div key={index} className="p-4 border rounded-md">
                   <h3 className="font-semibold">{hotel.name}</h3>
                   <p className="text-gray-600">{hotel.description}</p>
@@ -215,7 +209,7 @@ export default function TravelForm() {
           <section>
             <h2 className="text-xl font-bold mb-4">Transportation</h2>
             <div className="grid gap-4">
-              {recommendations.transportation.map((transport, index) => (
+              {recommendations?.transportation?.map((transport, index) => (
                 <div key={index} className="p-4 border rounded-md">
                   <h3 className="font-semibold">{transport.type}</h3>
                   <p className="text-gray-600">{transport.description}</p>

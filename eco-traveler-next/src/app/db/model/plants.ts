@@ -74,30 +74,11 @@ export type inputPlan = {
 };
 
 // Function to get the Plan collection
-export const getPlans = async () => {
+export const getPlanCollection = async () => {
   const db = await getDb();
   const Plan = db.collection("Plan");
   return Plan;
 };
-
-// export async function generateAi(): Promise<aiResult> {
-//   const openai = new OpenAI();
-//   const completion = await openai.chat.completions.create({
-//     model: "gpt-4o-mini",
-//     messages: [
-//       { role: "system", content: "You are a helpful assistant." },
-//       {
-//         role: "user",
-//         content:
-//           "Give me recommendations of places, hotels, and transportation in Bogor for a 5-day trip, in JSON format with properties: destination[{name, description}], hotel[{name, description, rating, price}], transportation[{type, description, price}]. Only provide JSON format without any introductory text or code formatting.",
-//       },
-//     ],
-//   });
-
-//   const text = completion.choices[0].message.content ?? "";
-//   const result = JSON.parse(text);
-//   return result;
-// }
 
 export const createPlan = async (plan: inputPlan) => {
   const modifierPlan: resultInputPlan = {
@@ -124,7 +105,13 @@ export const createPlan = async (plan: inputPlan) => {
   };
   console.log(modifierPlan);
 
-  const Plan = await getPlans();
+  const Plan = await getPlanCollection();
   const result = await Plan.insertOne(modifierPlan); // Use modifierPlan here
+  return result;
+};
+
+export const getPlans = async (): Promise<plan[]> => {
+  const Plan = await getPlanCollection();
+  const result = (await Plan.find().toArray()) as plan[];
   return result;
 };

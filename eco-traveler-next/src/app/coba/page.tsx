@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { aiResult } from "../db/model/plants";
+import { aiResult } from "@/db/models/Plan";
 
 // interface TravelRecommendation {
 //   destination: Array<{ name: string; description: string }>;
@@ -163,7 +163,8 @@ export default function TravelForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 disabled:opacity-50">
+            className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 disabled:opacity-50"
+          >
             {loading ? (
               <span className="flex items-center justify-center">
                 <Loader2 className="animate-spin mr-2" />

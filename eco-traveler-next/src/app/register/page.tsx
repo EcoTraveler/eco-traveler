@@ -6,7 +6,14 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import ClientLottieReact from "@/components/lottie-client/ClientLottie";
 import Traveler from "../../../public/animations/TravelerAnimation.json";
 
@@ -26,11 +33,21 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 md:p-8">
       <div className="w-full max-w-5xl flex flex-col lg:flex-row items-center gap-8">
-        <motion.div className="w-full md:w-1/2 max-w-md mb-8 md:mb-0 md:mr-8" initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ type: "spring", stiffness: 100, damping: 20 }}>
+        <motion.div
+          className="w-full md:w-1/2 max-w-md mb-8 md:mb-0 md:mr-8"
+          initial={{ x: -50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: -50, opacity: 0 }}
+          transition={{ type: "spring", stiffness: 100, damping: 20 }}
+        >
           <Card className="w-full">
             <CardHeader>
-              <CardTitle className="text-2xl font-bold text-green-500">Join Us Today</CardTitle>
-              <CardDescription>Create your account and start your journey</CardDescription>
+              <CardTitle className="text-2xl font-bold text-green-500">
+                Join Us Today
+              </CardTitle>
+              <CardDescription>
+                Create your account and start your journey
+              </CardDescription>
             </CardHeader>
             <form onSubmit={onSubmit}>
               <CardContent className="space-y-4">
@@ -52,7 +69,11 @@ export default function RegisterPage() {
                 </div>
               </CardContent>
               <CardFooter className="flex flex-col space-y-4">
-                <Button className="w-full bg-green-500 hover:bg-green-600" type="submit" disabled={isLoading}>
+                <Button
+                  className="w-full bg-green-500 hover:bg-green-600"
+                  type="submit"
+                  disabled={isLoading}
+                >
                   {isLoading ? "Creating your account..." : "Create Account"}
                 </Button>
                 <p className="text-sm text-center text-gray-600">
@@ -65,7 +86,13 @@ export default function RegisterPage() {
             </form>
           </Card>
         </motion.div>
-        <motion.div className="w-full lg:w-1/2" initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: 50, opacity: 0 }} transition={{ type: "spring", stiffness: 100, damping: 20 }}>
+        <motion.div
+          className="w-full lg:w-1/2"
+          initial={{ x: 50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: 50, opacity: 0 }}
+          transition={{ type: "spring", stiffness: 100, damping: 20 }}
+        >
           <div className="w-full h-full flex items-center justify-center">
             <ClientLottieReact animationData={Traveler} />
           </div>

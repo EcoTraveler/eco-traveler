@@ -1,4 +1,4 @@
-import { createPlan, getPlans, plan } from "@/app/db/model/plants";
+import { createPlan, getPlans, plan } from "@/db/models/Plan";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 export type myResponse<T> = {

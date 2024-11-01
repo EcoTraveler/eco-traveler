@@ -24,7 +24,6 @@ export default function Navbar() {
               <Image src="/assets/EcoTraveler.ico" alt="EcoTraveler Logo" width={40} height={40} />
             </Link>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <NavLink href="/">Home</NavLink>
               <NavLink href="/destinations">Destinations</NavLink>
               <NavLink href="/plannings">List Plannings</NavLink>
               <NavLink href="/about">About</NavLink>

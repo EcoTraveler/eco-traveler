@@ -13,7 +13,7 @@ export async function POST(req: Request) {
         { role: "system", content: "You are a helpful assistant." },
         {
           role: "user",
-          content: `Give me recommendations of places, hotels, and transportation in ${destination} for a ${duration}-day trip with budget Rp. ${budget}, in JSON format with properties: destination[{name, description}], hotel[{name, description, rating, price}], transportation[{type, description, price}]. Only provide JSON format without any introductory text or code formatting.`,
+          content: `Give me recommendations of places, hotels, and transportation in ${destination} for a ${duration}-day trip with budget Rp. ${budget}, in JSON format with properties: destination[{_id:string, name:string, description:string}], hotel[{_id:string, name:string, description:string, rating:number, price:string}], transportation[{_id:string, type:string, description:string, price:string}]. Only provide JSON format without any introductory text or code formatting.`,
         },
       ],
     });

@@ -1,27 +1,30 @@
 "use client";
 import React, { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { aiResult } from "../db/model/plants";
 
-interface TravelRecommendation {
-  destination: Array<{ name: string; description: string }>;
-  hotel: Array<{
-    name: string;
-    description: string;
-    rating: number;
-    price: string;
-  }>;
-  transportation: Array<{ type: string; description: string; price: string }>;
-}
+// interface TravelRecommendation {
+//   destination: Array<{ name: string; description: string }>;
+//   hotel: Array<{
+//     name: string;
+//     description: string;
+//     rating: number;
+//     price: string;
+//   }>;
+//   transportation: Array<{ type: string; description: string; price: string }>;
+// }
 
 export default function TravelForm() {
+  const [name, setName] = useState("");
   const [destination, setDestination] = useState("");
   const [duration, setDuration] = useState(5);
   const [budget, setBudget] = useState("");
   const [loading, setLoading] = useState(false);
-  const [recommendations, setRecommendations] =
-    useState<TravelRecommendation | null>(null);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [recommendations, setRecommendations] = useState<aiResult | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleRecomendation = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
@@ -36,7 +39,7 @@ export default function TravelForm() {
           body: JSON.stringify({
             destination,
             duration,
-            budget: Number(budget),
+            budget,
           }),
         }
       );
@@ -45,16 +48,66 @@ export default function TravelForm() {
       setRecommendations(data);
     } catch (error) {
       console.error("Error:", error);
-      alert("Failed to get recommendations. Please try again.");
     } finally {
       setLoading(false);
+    }
+  };
+  const handleCreatePlan = async () => {
+    if (!recommendations) {
+      throw new Error(
+        "No recommendations available. Please get recommendations first."
+      );
+    }
+
+    const { destination, transportation, hotel } = recommendations;
+    console.log(recommendations, "data dari client >>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+    try {
+      const response = await fetch("http://localhost:3000/api/plan", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          userId: "67224e9880f07c7d2023af17", // replace with actual user ID if needed
+          duration,
+          destination,
+          transportation,
+          hotel,
+          budget,
+          startDate,
+          endDate,
+        }),
+      });
+
+      if (response.ok) {
+        console.log("Plan created successfully!");
+        // Optionally reset form or navigate to another page
+      } else {
+        const errorData = await response.json();
+        console.log(`Failed to create plan: ${errorData.message}`);
+      }
+    } catch (error) {
+      console.error("Error creating plan:", error);
+      // alert("Failed to create plan. Please try again.");
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <form onSubmit={handleSubmit} className="mb-8">
+      <form onSubmit={handleRecomendation} className="mb-8">
         <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">Plan name</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full p-2 border rounded-md"
+              required
+            />
+          </div>
           <div>
             <label className="block text-sm font-medium mb-1">
               Destination
@@ -86,6 +139,28 @@ export default function TravelForm() {
               type="text"
               value={budget}
               onChange={(e) => setBudget(e.target.value)}
+              min={1}
+              className="w-full p-2 border rounded-md"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Start-date</label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              min={1}
+              className="w-full p-2 border rounded-md"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">end-date</label>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
               min={1}
               className="w-full p-2 border rounded-md"
               required
@@ -151,6 +226,9 @@ export default function TravelForm() {
               ))}
             </div>
           </section>
+          <button onClick={handleCreatePlan} className="btn btn-neutral">
+            create a plan
+          </button>
         </div>
       )}
     </div>

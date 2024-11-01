@@ -9,16 +9,45 @@ export type myResponse<T> = {
 };
 const planInputSchema = z.object({
   userId: z.string(),
-  name: z.string(),
-  budget: z.number(),
-  duration: z.string(),
+  name: z.string().min(1, "Name required"),
+  budget: z.string().min(1, "Budget required"),
+  destination: z.array(
+    z.object({ _id: z.string(), name: z.string(), description: z.string() })
+  ),
+  hotel: z.array(
+    z.object({
+      _id: z.string(),
+      name: z.string(),
+      description: z.string(),
+      rating: z.number(),
+      price: z.string(),
+    })
+  ),
+  transportation: z
+    .array(
+      z.object({
+        _id: z.string(),
+        type: z.string(),
+        description: z.string(),
+        price: z.string(),
+      })
+    )
+    .min(1, "At least one transportation option is required"),
+  duration: z.number().min(1, "Duration required"),
   startDate: z.string(),
   endDate: z.string(),
 });
 export const POST = async (request: Request) => {
   try {
     const data = await request.json();
-    console.log(data);
+    const { endDate, startDate } = data;
+    if (endDate && startDate) {
+      if (new Date(startDate) > new Date(endDate)) {
+        throw new Error("the endDate cannot be earlier than startDate");
+      }
+    }
+
+    // console.log(data, "ini data input>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
     const parsedData = planInputSchema.safeParse(data);
     if (!parsedData.success) throw parsedData.error;

@@ -4,6 +4,7 @@ import { z } from "zod";
 export const errHandler = (err: any): Response => {
   let message = "internal server error";
   let status = 500;
+  console.log(err);
 
   if (err instanceof z.ZodError) {
     message = err.issues[0].message;
@@ -14,6 +15,10 @@ export const errHandler = (err: any): Response => {
     status = status; // Optional: Check for a custom status
   }
   if (err.message == "email/username already exist") {
+    message = err.message;
+    status = err.status;
+  }
+  if (err.message == "invalid email/password") {
     message = err.message;
     status = err.status;
   }

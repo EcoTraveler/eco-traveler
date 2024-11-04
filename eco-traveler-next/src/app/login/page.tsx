@@ -24,19 +24,24 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errMessage, setErrMessage] = useState("");
   const router = useRouter();
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setIsLoading(true);
 
-    // Simulating an API call
     const login = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
     const response = await login.json();
-    if (!login.ok) throw response;
+
+    if (!login.ok) {
+      setErrMessage(response.message || "Login failed");
+      throw response;
+    }
+
     setEmail("");
     setPassword("");
     router.push("/");
@@ -116,7 +121,11 @@ export default function LoginPage() {
                 </Button>
               </CardFooter>
             </form>
-
+            {errMessage && (
+              <p className="text-red-500 text-sm flex justify-center">
+                {errMessage}
+              </p>
+            )}
             <div className="px-6 pb-6 pt-2">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">

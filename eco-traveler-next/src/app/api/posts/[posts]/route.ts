@@ -1,9 +1,6 @@
-import { database } from "@/db/config";
 import { Posts } from "@/db/models/Posts";
 import { errHandler } from "@/db/utils/errHandler";
 import { ObjectId } from "mongodb";
-import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
 export async function POST(
   request: Request,
   { params }: { params: { posts: ObjectId } }

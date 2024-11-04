@@ -16,18 +16,60 @@ import {
 } from "@/components/ui/card";
 import ClientLottieReact from "@/components/lottie-client/ClientLottie";
 import Traveler from "../../../public/animations/TravelerAnimation.json";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPasswordSame, setIsPasswordSame] = useState(true);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [password2nd, setPassword2nd] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const router = useRouter();
 
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setIsLoading(true);
 
-    // Simulating an API call
-    setTimeout(() => {
+    setErrorMessage("");
+    if (password !== password2nd) {
+      setIsPasswordSame(false);
       setIsLoading(false);
-    }, 3000);
+      return;
+    } else {
+      setIsPasswordSame(true);
+    }
+
+    try {
+      const register = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, name, username: name, password }),
+        }
+      );
+
+      const data = await register.json();
+
+      if (!register.ok) {
+        setErrorMessage(data.message || "Registration failed");
+        throw data;
+      }
+
+      setName("");
+      setEmail("");
+      setPassword("");
+      setPassword2nd("");
+      router.push("/login");
+    } catch (error) {
+      console.error("Registration failed:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -53,20 +95,52 @@ export default function RegisterPage() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="fullname">Full Name</Label>
-                  <Input id="fullname" type="text" required />
+                  <Input
+                    id="fullname"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                    type="text"
+                    required
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" required />
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    required
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password">Password</Label>
-                  <Input id="password" type="password" required />
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    required
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="confirm-password">Confirm Password</Label>
-                  <Input id="confirm-password" type="password" required />
+                  <Input
+                    id="confirm-password"
+                    type="password"
+                    value={password2nd}
+                    onChange={(event) => setPassword2nd(event.target.value)}
+                    required
+                  />
+                  {!isPasswordSame && (
+                    <p className="text-red-500 text-sm">
+                      Passwords do not match. Please try again.
+                    </p>
+                  )}
                 </div>
+                {errorMessage && (
+                  <p className="text-red-500 text-sm">{errorMessage}</p>
+                )}
               </CardContent>
               <CardFooter className="flex flex-col space-y-4">
                 <Button

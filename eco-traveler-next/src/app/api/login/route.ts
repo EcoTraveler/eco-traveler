@@ -1,18 +1,22 @@
 import { createToken } from "@/db/utils/jwt";
 import { cookies } from "next/headers";
-import { compareTextWithHash } from "@/db/utils/bcrypt";
-import { errHandler } from "@/db/utils/errHandler";
 import { database } from "@/db/config";
+import { auth } from "@clerk/nextjs/server";
 
 export async function POST(request: Request) {
   try {
-    const { email, password } = await request.json();
-    console.log(email, password);
-    const user = await database.collection("Users").findOne({ email });
-    if (!user) throw { message: "invalid email/password", status: 401 };
-    const validpass = compareTextWithHash(password, user.password);
-    if (validpass === false || !validpass)
-      throw { message: "invalid email/password", status: 401 };
+    const { userId } = await auth();
+
+    if (!userId) {
+      throw { message: "Unauthorized", status: 401 };
+    }
+
+    const user = await database.collection("Users").findOne({ clerkId: userId });
+
+    if (!user) {
+      throw { message: "User not found", status: 404 };
+    }
+
     const payload = {
       id: user._id,
       name: user.name,
@@ -22,9 +26,20 @@ export async function POST(request: Request) {
 
     const token = createToken(payload);
 
-    cookies().set("Authorization", `Bearer ${token}`);
-    return Response.json({ access_token: token });
+    cookies().set("auth_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== "development",
+      sameSite: "strict",
+      maxAge: 3600, // 1 hour
+      path: "/",
+    });
+
+    return Response.json({ message: "Login successful" });
   } catch (error) {
-    return errHandler(error);
+    if (error instanceof Error) {
+      console.error(error.message);
+    } else {
+      console.error("An unknown error occurred");
+    }
   }
 }

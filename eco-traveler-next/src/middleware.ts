@@ -1,19 +1,58 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { verifyToken } from "./db/utils/jwt";
 
 const isProtectedRoute = createRouteMatcher(["/plannings", "/ai-recommendation"]);
+const isApiRoute = createRouteMatcher(["/api/posts/[posts]"]);
 
-export default clerkMiddleware(async (auth, req) => {
+export default clerkMiddleware(async (auth, req: NextRequest) => {
   const { userId } = await auth();
 
   if (!userId && isProtectedRoute(req)) {
-    // Add custom logic to run before redirecting
-
     // Custom redirect to /sign-in
     const signInUrl = new URL("/sign-in", req.url);
     signInUrl.searchParams.set("redirect_url", req.url);
     return NextResponse.redirect(signInUrl);
   }
+
+  if (isApiRoute(req)) {
+    const authHeader = req.headers.get("Authorization");
+
+    if (!authHeader) {
+      return NextResponse.json({ message: "Please login first" }, { status: 401 });
+    }
+
+    const [type, token] = authHeader.split(" ");
+
+    if (type !== "Bearer") {
+      return NextResponse.json({ message: "Invalid credential" }, { status: 401 });
+    }
+
+    try {
+      const decode = await verifyToken<{
+        id: string;
+        name: string;
+        username: string;
+        email: string;
+      }>(token);
+
+      const response = NextResponse.next();
+
+      // Set custom headers
+      response.headers.set("x-user-email", decode.email);
+      response.headers.set("x-user-id", decode.id);
+      response.headers.set("x-user-username", decode.username);
+      response.headers.set("x-user-name", decode.name);
+
+      return response;
+    } catch (error) {
+      console.error("Error verifying token:", error);
+      return NextResponse.json({ message: "Invalid token" }, { status: 401 });
+    }
+  }
+
+  // For non-API routes that are not protected, just continue
+  return NextResponse.next();
 });
 
 export const config = {

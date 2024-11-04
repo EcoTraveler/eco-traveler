@@ -1,18 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { SignIn } from "@clerk/nextjs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import ClientLottieReact from "@/components/lottie-client/ClientLottie";
 import Traveler from "../../../../public/animations/TravelerAnimation.json";
 import { ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
   return (
     <div className="min-h-screen flex items-center justify-center p-4 md:p-8">
       <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ type: "spring", stiffness: 100, damping: 20 }}>

@@ -1,4 +1,4 @@
-import { createPlan, getPlans, plan } from "@/app/db/model/plants";
+import { createPlan, getPlans, plan } from "@/db/models/Plan";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 export type myResponse<T> = {
@@ -11,11 +11,7 @@ const planInputSchema = z.object({
   userId: z.string(),
   name: z.string().min(1, "Name required"),
   budget: z.string().min(1, "Budget required"),
-  destination: z
-    .array(
-      z.object({ _id: z.string(), name: z.string(), description: z.string() })
-    )
-    .min(1, "At least one destination option is required"),
+  destination: z.array(z.object({ _id: z.string(), name: z.string(), description: z.string() })).min(1, "At least one destination option is required"),
   hotel: z.array(
     z.object({
       _id: z.string(),
@@ -54,12 +50,8 @@ export const POST = async (request: Request) => {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); //convert total time  to day
 
     if (diffDays > duration) {
-      throw new Error(
-        "The total days between startDate and endDate cannot exceed the duration."
-      );
+      throw new Error("The total days between startDate and endDate cannot exceed the duration.");
     }
-
-    console.log(data, "ini data input>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
     const parsedData = planInputSchema.safeParse(data);
     if (!parsedData.success) throw parsedData.error;

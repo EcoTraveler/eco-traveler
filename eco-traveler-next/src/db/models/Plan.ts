@@ -101,7 +101,7 @@ export const createPlan = async (plan: inputPlan) => {
       price: trans.price,
     })),
   };
-  console.log(modifierPlan);
+  console.log(modifierPlan, "ini model");
 
   const Plan = getPlanCollection();
   const result = (await Plan).insertOne(modifierPlan); // Use modifierPlan here
@@ -113,3 +113,4 @@ export const getPlans = async (): Promise<plan[]> => {
   const result = (await Plan).find().toArray() as unknown as plan[];
   return result;
 };
+

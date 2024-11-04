@@ -22,7 +22,12 @@ export async function POST(request: Request) {
 
     const token = createToken(payload);
 
-    cookies().set("Authorization", `Bearer ${token}`);
+    cookies().set("token", token, {
+      httpOnly: true,
+      secure: false,
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
+      sameSite: "strict",
+    });
     return Response.json({ access_token: token });
   } catch (error) {
     return errHandler(error);

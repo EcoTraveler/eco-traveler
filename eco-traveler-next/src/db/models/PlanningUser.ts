@@ -1,3 +1,4 @@
+// db/models/PlanningUser.ts
 import { ObjectId } from "mongodb";
 import { database } from "../config";
 

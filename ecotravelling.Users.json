@@ -1,0 +1,88 @@
+[{
+  "_id": {
+    "$oid": "672477d0ea55ccaad3284450"
+  },
+  "name": "melvin",
+  "username": "melvin",
+  "email": "melvin@mail.com",
+  "password": "$2a$10$B6HN9ft7Zrl8kM8ilEBcyuiqTvO0AqR2jBjK2sVUMje/CM/0KVn8e",
+  "imgUrl": "https://placehold.co/200x/ffa8e4/ffffff.svg?text=%CA%95%E2%80%A2%CC%81%E1%B4%A5%E2%80%A2%CC%80%CA%94&font=Lato",
+  "token": 5
+},
+{
+  "_id": {
+    "$oid": "6724a4cb1e3aba2d54838c12"
+  },
+  "name": "ravi",
+  "username": "ravi",
+  "email": "ravi@mail.com",
+  "password": "$2a$10$iKhWpbqVhO6ZNVWAY6jeJeeVT61yoOHddnDZ.ewVSvHqCUKuQvu2W",
+  "imgUrl": "https://placehold.co/200x/ffa8e4/ffffff.svg?text=%CA%95%E2%80%A2%CC%81%E1%B4%A5%E2%80%A2%CC%80%CA%94&font=Lato",
+  "token": 5
+},
+{
+  "_id": {
+    "$oid": "6725e5809c2ccd02a7a17161"
+  },
+  "name": "Raihan",
+  "username": "Raihan",
+  "email": "raihan@mail.com",
+  "password": "123456",
+  "imgUrl": "https://placehold.co/200x/ffa8e4/ffffff.svg?text=%CA%95%E2%80%A2%CC%81%E1%B4%A5%E2%80%A2%CC%80%CA%94&font=Lato",
+  "token": 5
+},
+{
+  "_id": {
+    "$oid": "6725e5809c2ccd02a7a17165"
+  },
+  "name": "Seno",
+  "username": "Seno",
+  "email": "seno@mail.com",
+  "password": "123456",
+  "imgUrl": "https://placehold.co/200x/ffa8e4/ffffff.svg?text=%CA%95%E2%80%A2%CC%81%E1%B4%A5%E2%80%A2%CC%80%CA%94&font=Lato",
+  "token": 5
+},
+{
+  "_id": {
+    "$oid": "6725e5809c2ccd02a7a17164"
+  },
+  "name": "Naufal",
+  "username": "naufal",
+  "email": "naufal@mail.com",
+  "password": "123456",
+  "imgUrl": "https://placehold.co/200x/ffa8e4/ffffff.svg?text=%CA%95%E2%80%A2%CC%81%E1%B4%A5%E2%80%A2%CC%80%CA%94&font=Lato",
+  "token": 5
+},
+{
+  "_id": {
+    "$oid": "6725e5809c2ccd02a7a17163"
+  },
+  "name": "Dwiki",
+  "username": "Dwiki",
+  "email": "dwiki@mail.com",
+  "password": "123456",
+  "imgUrl": "https://placehold.co/200x/ffa8e4/ffffff.svg?text=%CA%95%E2%80%A2%CC%81%E1%B4%A5%E2%80%A2%CC%80%CA%94&font=Lato",
+  "token": 5
+},
+{
+  "_id": {
+    "$oid": "6725e5809c2ccd02a7a17162"
+  },
+  "name": "Yubi",
+  "username": "Yubi",
+  "email": "yubi@mail.com",
+  "password": "123456",
+  "imgUrl": "https://placehold.co/200x/ffa8e4/ffffff.svg?text=%CA%95%E2%80%A2%CC%81%E1%B4%A5%E2%80%A2%CC%80%CA%94&font=Lato",
+  "token": 5
+},
+{
+  "_id": {
+    "$oid": "6725ea8d2646ccaa3f1c1042"
+  },
+  "name": "user",
+  "username": "user",
+  "email": "user@mail.com",
+  "password": "$2a$10$GY4ZS1n4jS9v.ZqM4jAi/uqEbCBt.3wBgCc2f18ixleqO7nZviicW",
+  "imgUrl": "https://placehold.co/200x/ffa8e4/ffffff.svg?text=%CA%95%E2%80%A2%CC%81%E1%B4%A5%E2%80%A2%CC%80%CA%94&font=Lato",
+  "token": 5
+}]

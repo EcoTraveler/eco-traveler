@@ -1,0 +1,575 @@
+[{
+  "_id": {
+    "$oid": "672588fd75a514b2c6d38c5f"
+  },
+  "userId": {
+    "$oid": "605c72f9b7a3b64e3b8e3c6a"
+  },
+  "name": "Trip to Bali",
+  "budget": "5000000",
+  "destination": [
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c6b"
+      },
+      "name": "Kuta Beach",
+      "description": "A beautiful beach known for surfing and nightlife."
+    },
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c6c"
+      },
+      "name": "Ubud",
+      "description": "A cultural center with rice terraces and art markets."
+    }
+  ],
+  "hotel": [
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c6d"
+      },
+      "name": "The Legian",
+      "description": "A luxury beachfront resort.",
+      "rating": 5,
+      "price": "2000000"
+    },
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c6e"
+      },
+      "name": "Ubud Village Hotel",
+      "description": "A tranquil hotel with a beautiful garden.",
+      "rating": 4,
+      "price": "1500000"
+    }
+  ],
+  "transportation": [
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c6f"
+      },
+      "type": "Car",
+      "description": "Private car rental.",
+      "price": "500000"
+    },
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c70"
+      },
+      "type": "Motorbike",
+      "description": "Scooter rental for easy travel.",
+      "price": "200000"
+    }
+  ],
+  "duration": 5,
+  "startDate": "2024-12-01",
+  "endDate": "2024-12-04"
+},
+{
+  "_id": {
+    "$oid": "67258bb83fc5f4592e1d0702"
+  },
+  "userId": {
+    "$oid": "67224e9880f07c7d2023af17"
+  },
+  "name": "bali",
+  "budget": "10000,00",
+  "destination": [
+    {
+      "_id": {
+        "$oid": "60c62b1f9af7b6c4998e64be"
+      },
+      "name": "Uluwatu Temple",
+      "description": "One of six key temples believed to be Bali's spiritual pillars, is renowned for its magnificent location"
+    },
+    {
+      "_id": {
+        "$oid": "61100f9624fcba98208778f4"
+      },
+      "name": "Tegallalang Rice Terraces",
+      "description": "Iconic rice paddies in Bali, which offer a perfect Bali photo opportunity with its dramatic views"
+    },
+    {
+      "_id": {
+        "$oid": "5fccf4a9cd332a9f9578cf15"
+      },
+      "name": "Tanah Lot Temple",
+      "description": "One of Bali’s most important landmarks, famed for its unique offshore setting and sunset backdrops"
+    }
+  ],
+  "hotel": [
+    {
+      "_id": {
+        "$oid": "60e5db754cc5384f92f68941"
+      },
+      "name": "The Legian Bali",
+      "description": "A 5-star hotel located in Seminyak area with direct beach access",
+      "rating": 4.6,
+      "price": "Rp. 2000,00 per night"
+    },
+    {
+      "_id": {
+        "$oid": "61117b705036bcc28782f324"
+      },
+      "name": "Kuta Seaview Boutique Resort",
+      "description": "A beachfront resort located in Kuta with Balinese style bungalows",
+      "rating": 4.3,
+      "price": "Rp. 1500,00 per night"
+    },
+    {
+      "_id": {
+        "$oid": "5fccf4a9cd332a9f9578cf15"
+      },
+      "name": "Hard Rock Hotel Bali",
+      "description": "Themed lodging with modern style rooms, located in Kuta",
+      "rating": 4.5,
+      "price": "Rp. 1800,00 per night"
+    }
+  ],
+  "transportation": [
+    {
+      "_id": {
+        "$oid": "608af6cfc3dee5b9ff9889e7"
+      },
+      "type": "Private Car Rental",
+      "description": "Private car rental with driver, can be used for up to 10 hours a day",
+      "price": "Rp. 500,00 per day"
+    },
+    {
+      "_id": {
+        "$oid": "61100f9624fcba98208778f4"
+      },
+      "type": "Motorbike Rental",
+      "description": "Motorbike rental, providing flexibility to navigate through Bali",
+      "price": "Rp. 100,00 per day"
+    },
+    {
+      "_id": {
+        "$oid": "5fccf4a9cd332a9f9578cf15"
+      },
+      "type": "Traditional Taxi",
+      "description": "Traditional taxis, blue bird or grab, can be found easily in every corner of Bali",
+      "price": "Varies depending on the distance"
+    }
+  ],
+  "duration": 5,
+  "startDate": "2024-11-02",
+  "endDate": "2024-11-06"
+},
+{
+  "_id": {
+    "$oid": "6725e6c39c2ccd02a7a1716c"
+  },
+  "userId": {
+    "$oid": "672477d0ea55ccaad3284450"
+  },
+  "name": "Hicking Pandawa",
+  "budget": "5000000",
+  "destination": [
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c6b"
+      },
+      "name": "Kuta Beach",
+      "description": "A beautiful beach known for surfing and nightlife."
+    },
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c6c"
+      },
+      "name": "Ubud",
+      "description": "A cultural center with rice terraces and art markets."
+    }
+  ],
+  "hotel": [
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c6d"
+      },
+      "name": "The Legian",
+      "description": "A luxury beachfront resort.",
+      "rating": 5,
+      "price": "2000000"
+    },
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c6e"
+      },
+      "name": "Ubud Village Hotel",
+      "description": "A tranquil hotel with a beautiful garden.",
+      "rating": 4,
+      "price": "1500000"
+    }
+  ],
+  "transportation": [
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c6f"
+      },
+      "type": "Car",
+      "description": "Private car rental.",
+      "price": "500000"
+    },
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c70"
+      },
+      "type": "Motorbike",
+      "description": "Scooter rental for easy travel.",
+      "price": "200000"
+    }
+  ],
+  "duration": 5,
+  "startDate": "2024-12-01",
+  "endDate": "2024-12-04"
+},
+{
+  "_id": {
+    "$oid": "6725e6c39c2ccd02a7a1716b"
+  },
+  "userId": {
+    "$oid": "672477d0ea55ccaad3284450"
+  },
+  "name": "Pantai Kuta Seru",
+  "budget": "5000000",
+  "destination": [
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c6b"
+      },
+      "name": "Kuta Beach",
+      "description": "A beautiful beach known for surfing and nightlife."
+    },
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c6c"
+      },
+      "name": "Ubud",
+      "description": "A cultural center with rice terraces and art markets."
+    }
+  ],
+  "hotel": [
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c6d"
+      },
+      "name": "The Legian",
+      "description": "A luxury beachfront resort.",
+      "rating": 5,
+      "price": "2000000"
+    },
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c6e"
+      },
+      "name": "Ubud Village Hotel",
+      "description": "A tranquil hotel with a beautiful garden.",
+      "rating": 4,
+      "price": "1500000"
+    }
+  ],
+  "transportation": [
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c6f"
+      },
+      "type": "Car",
+      "description": "Private car rental.",
+      "price": "500000"
+    },
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c70"
+      },
+      "type": "Motorbike",
+      "description": "Scooter rental for easy travel.",
+      "price": "200000"
+    }
+  ],
+  "duration": 5,
+  "startDate": "2024-12-01",
+  "endDate": "2024-12-04"
+},
+{
+  "_id": {
+    "$oid": "6725e6c39c2ccd02a7a1716d"
+  },
+  "userId": {
+    "$oid": "672477d0ea55ccaad3284450"
+  },
+  "name": "Menelusuri Jalan Malam Angker",
+  "budget": "5000000",
+  "destination": [
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c6b"
+      },
+      "name": "Kuta Beach",
+      "description": "A beautiful beach known for surfing and nightlife."
+    },
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c6c"
+      },
+      "name": "Ubud",
+      "description": "A cultural center with rice terraces and art markets."
+    }
+  ],
+  "hotel": [
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c6d"
+      },
+      "name": "The Legian",
+      "description": "A luxury beachfront resort.",
+      "rating": 5,
+      "price": "2000000"
+    },
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c6e"
+      },
+      "name": "Ubud Village Hotel",
+      "description": "A tranquil hotel with a beautiful garden.",
+      "rating": 4,
+      "price": "1500000"
+    }
+  ],
+  "transportation": [
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c6f"
+      },
+      "type": "Car",
+      "description": "Private car rental.",
+      "price": "500000"
+    },
+    {
+      "_id": {
+        "$oid": "605c72f9b7a3b64e3b8e3c70"
+      },
+      "type": "Motorbike",
+      "description": "Scooter rental for easy travel.",
+      "price": "200000"
+    }
+  ],
+  "duration": 5,
+  "startDate": "2024-12-01",
+  "endDate": "2024-12-04"
+},
+{
+  "_id": {
+    "$oid": "67287bb7d8f5c348b7e74483"
+  },
+  "userId": {
+    "$oid": "67224e9880f07c7d2023af17"
+  },
+  "name": "Staycation to bali",
+  "budget": "5000000",
+  "destination": [
+    {
+      "_id": {
+        "$oid": "5f3ad3e4bd4441234567d128"
+      },
+      "name": "Ubud",
+      "description": "Known as Bali's cultural heart, surrounded by beautiful rainforest and terraced rice paddies, dotted with Hindu temples and shrines"
+    },
+    {
+      "_id": {
+        "$oid": "5f3ad3e4bd4441234567d129"
+      },
+      "name": "Seminyak",
+      "description": "Popular for its high-end tourism, hosts many luxurious resorts, restaurants, and clubs."
+    },
+    {
+      "_id": {
+        "$oid": "5f3ad3e4bd4441234567d130"
+      },
+      "name": "Kuta",
+      "description": "Best known for its party-centric atmosphere and surfing spots, a perfect place for young tourists."
+    }
+  ],
+  "hotel": [
+    {
+      "_id": {
+        "$oid": "5f3ad3e4bd5551234567d139"
+      },
+      "name": "Bloo Hostel, Kuta",
+      "description": "A budget-friendly hostel located near beach, features a mix of private rooms and dormitories",
+      "rating": 4,
+      "price": "Rp. 100000/day"
+    },
+    {
+      "_id": {
+        "$oid": "5f3ad3e4bd5551234567d140"
+      },
+      "name": "Zen Rooms Manik Guest House Ubud",
+      "description": "An affordable accommodation in traditional Balinese style, located in the heart of Ubud",
+      "rating": 4.1,
+      "price": "Rp. 150000/day"
+    },
+    {
+      "_id": {
+        "$oid": "5f3ad3e4bd5551234567d141"
+      },
+      "name": "Kamar Kamar Seminyak",
+      "description": "A budget guest house offering modern comfort with a strategic location",
+      "rating": 4.5,
+      "price": "Rp. 200000/day"
+    }
+  ],
+  "transportation": [
+    {
+      "_id": {
+        "$oid": "5f3ad3e4bd6661234567d142"
+      },
+      "type": "Rental Motorbike",
+      "description": "A convenient way to travel around Bali, avoiding traffic jam",
+      "price": "Rp. 60000/day"
+    },
+    {
+      "_id": {
+        "$oid": "5f3ad3e4bd6661234567d143"
+      },
+      "type": "Taxi",
+      "description": "Available 24 hours for your easy transportation",
+      "price": "Rp. 70000/10 km"
+    },
+    {
+      "_id": {
+        "$oid": "5f3ad3e4bd6661234567d144"
+      },
+      "type": "Shuttle Bus",
+      "description": "A cheaper alternative for traveling to popular tourist destinations in Bali",
+      "price": "Rp. 20000/person"
+    }
+  ],
+  "duration": 5,
+  "startDate": "2024-11-04",
+  "endDate": "2024-11-09"
+},
+{
+  "_id": {
+    "$oid": "67287d88c6e8a658d13d372f"
+  },
+  "userId": {
+    "$oid": "67224e9880f07c7d2023af17"
+  },
+  "name": "bandung",
+  "budget": "2000,000",
+  "destination": [
+    {
+      "_id": {
+        "$oid": "607dbcfc7cae950d003ef323"
+      },
+      "name": "Taman Hutan Raya Juanda",
+      "description": "A natural conservation area offering a cool, forested escape from the city. Hiking trails, caves, and a waterfall make this destination a must-visit."
+    }
+  ],
+  "hotel": [
+    {
+      "_id": {
+        "$oid": "607dbe277cae950d003ef326"
+      },
+      "name": "Serela Cihampelas Hotel",
+      "description": "A 3-star hotel located in the city center. Close to many eateries and shopping outlets.",
+      "rating": 3.6,
+      "price": "Rp.400000"
+    }
+  ],
+  "transportation": [
+    {
+      "_id": {
+        "$oid": "607dbe917cae950d003ef328"
+      },
+      "type": "Taxi",
+      "description": "Local city taxis provide convenient transportation around the city. Available for both call and street hail.",
+      "price": "Rp. 70000"
+    }
+  ],
+  "duration": 5,
+  "startDate": "2024-11-04",
+  "endDate": "2024-11-08"
+},
+{
+  "_id": {
+    "$oid": "67288887d8f5c348b7e74484"
+  },
+  "userId": {
+    "$oid": "67224e9880f07c7d2023af17"
+  },
+  "name": "Staycation to bali",
+  "budget": "5000000",
+  "destination": [
+    {
+      "_id": {
+        "$oid": "6009df6f0f4a2b3300134291"
+      },
+      "name": "Tanah Lot Temple",
+      "description": "One of Bali’s most important landmarks, famed for its unique offshore setting and sunset backdrops."
+    },
+    {
+      "_id": {
+        "$oid": "6009df6f0f4a2b3300134292"
+      },
+      "name": "Ubud Monkey Forest",
+      "description": "A nature reserve and Hindu temple complex in Ubud, famed for its resident monkeys."
+    },
+    {
+      "_id": {
+        "$oid": "6009df6f0f4a2b3300134293"
+      },
+      "name": "Uluwatu Temple",
+      "description": "Balinese Hindu sea temple located in Uluwatu known for its magnificent location, perched on top of a steep cliff."
+    }
+  ],
+  "hotel": [
+    {
+      "_id": {
+        "$oid": "6009df6f0f4a2b3300134294"
+      },
+      "name": "Puri Garden Hotel and Hostel",
+      "description": "Located in Ubud, offers comfortable accommodation with Balinese architecture, a 24-hour front desk, and free WiFi access in all areas.",
+      "rating": 4.5,
+      "price": "Rp. 500000 per night"
+    },
+    {
+      "_id": {
+        "$oid": "6009df6f0f4a2b3300134295"
+      },
+      "name": "The Kana Kuta Hotel",
+      "description": "Located 5 minutes’ drive from Bali Galeria Mall, it boasts an outdoor swimming pool and provides free WiFi throughout the hotel.",
+      "rating": 4.5,
+      "price": "Rp. 600000 per night"
+    }
+  ],
+  "transportation": [
+    {
+      "_id": {
+        "$oid": "6009df6f0f4a2b3300134296"
+      },
+      "type": "Rent Car",
+      "description": "Renting a car for a day to go around Bali.",
+      "price": "Rp. 200000 per day"
+    },
+    {
+      "_id": {
+        "$oid": "6009df6f0f4a2b3300134297"
+      },
+      "type": "Motorbike",
+      "description": "More flexible transportation for Bali's often crowded streets, essentially during peak times.",
+      "price": "Rp. 50000 per day"
+    },
+    {
+      "_id": {
+        "$oid": "6009df6f0f4a2b3300134298"
+      },
+      "type": "Public Bus",
+      "description": "For the more budget conscious, Bali's public bus system makes travel affordable.",
+      "price": "Rp. 20000 per day"
+    }
+  ],
+  "duration": 5,
+  "startDate": "2024-11-04",
+  "endDate": "2024-11-09"
+}]

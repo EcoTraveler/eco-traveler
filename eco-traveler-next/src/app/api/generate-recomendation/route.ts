@@ -25,7 +25,9 @@ export async function POST(req: Request) {
     });
 
     // Parse the AI response as JSON
-    const recommendations = JSON.parse(completion.choices[0].message.content || "{}");
+    const recommendations = JSON.parse(
+      completion.choices[0].message.content || "{}"
+    );
 
     return NextResponse.json(recommendations);
   } catch (error) {

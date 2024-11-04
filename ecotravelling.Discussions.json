@@ -1,0 +1,60 @@
+[{
+  "_id": {
+    "$oid": "672801726f39b670a560f506"
+  },
+  "userId": {
+    "$oid": "6725e5809c2ccd02a7a17162"
+  },
+  "planningId": {
+    "$oid": "672588fd75a514b2c6d38c5f"
+  },
+  "message": "jawab dek"
+},
+{
+  "_id": {
+    "$oid": "672801726f39b670a560f504"
+  },
+  "userId": {
+    "$oid": "672477d0ea55ccaad3284450"
+  },
+  "planningId": {
+    "$oid": "672588fd75a514b2c6d38c5f"
+  },
+  "message": "haii dek"
+},
+{
+  "_id": {
+    "$oid": "672801726f39b670a560f503"
+  },
+  "userId": {
+    "$oid": "6724a4cb1e3aba2d54838c12"
+  },
+  "planningId": {
+    "$oid": "672588fd75a514b2c6d38c5f"
+  },
+  "message": "haiiii"
+},
+{
+  "_id": {
+    "$oid": "672801726f39b670a560f507"
+  },
+  "userId": {
+    "$oid": "6725e5809c2ccd02a7a17161"
+  },
+  "planningId": {
+    "$oid": "672588fd75a514b2c6d38c5f"
+  },
+  "message": "hai juga kak"
+},
+{
+  "_id": {
+    "$oid": "672801726f39b670a560f505"
+  },
+  "userId": {
+    "$oid": "6724a4cb1e3aba2d54838c12"
+  },
+  "planningId": {
+    "$oid": "672588fd75a514b2c6d38c5f"
+  },
+  "message": "jawab dek"
+}]

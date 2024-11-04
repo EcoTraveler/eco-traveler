@@ -77,6 +77,7 @@ export const POST = async (request: Request) => {
     );
   } catch (error) {
     const err = error as Error;
+    console.log(err);
 
     if (err instanceof z.ZodError) {
       const errPath = err.issues[0].path[0];

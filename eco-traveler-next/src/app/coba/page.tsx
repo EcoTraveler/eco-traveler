@@ -1,18 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { aiResult } from "@/db/models/Plan";
-
-// interface TravelRecommendation {
-//   destination: Array<{ name: string; description: string }>;
-//   hotel: Array<{
-//     name: string;
-//     description: string;
-//     rating: number;
-//     price: string;
-//   }>;
-//   transportation: Array<{ type: string; description: string; price: string }>;
-// }
+import { aiResult, destination, hotel, transportation } from "@/db/models/Plan";
 
 export default function TravelForm() {
   const [name, setName] = useState("");
@@ -22,7 +11,14 @@ export default function TravelForm() {
   const [loading, setLoading] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [recommendations, setRecommendations] = useState<aiResult | null>(null);
+  const [recommendations, setRecommendations] = useState<aiResult | null>();
+  const [selectedDestination, setSelectedDestination] = useState<
+    destination[] | null
+  >();
+  const [selectedHotel, setSelectedHotel] = useState<hotel[] | null>();
+  const [selectedTransportation, setSelectedTransportation] = useState<
+    transportation[] | null
+  >();
 
   const handleRecomendation = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,7 +26,7 @@ export default function TravelForm() {
 
     try {
       const response = await fetch(
-        " http://localhost:3000/api/generate-recomendation",
+        "http://localhost:3000/api/generate-recomendation",
         {
           method: "POST",
           headers: {
@@ -52,15 +48,13 @@ export default function TravelForm() {
       setLoading(false);
     }
   };
+
   const handleCreatePlan = async () => {
     if (!recommendations) {
       throw new Error(
         "No recommendations available. Please get recommendations first."
       );
     }
-
-    const { destination, transportation, hotel } = recommendations;
-    console.log(recommendations, "data dari client >>>>>>>>>>>>>>>>>>>>>>>>>>");
 
     try {
       const response = await fetch("http://localhost:3000/api/plan", {
@@ -72,9 +66,9 @@ export default function TravelForm() {
           name,
           userId: "67224e9880f07c7d2023af17", // replace with actual user ID if needed
           duration,
-          destination,
-          transportation,
-          hotel,
+          destination: selectedDestination, // Use the selected destination
+          transportation: selectedTransportation, // Use the selected transportation
+          hotel: selectedHotel, // Use the selected hotel
           budget,
           startDate,
           endDate,
@@ -90,8 +84,36 @@ export default function TravelForm() {
       }
     } catch (error) {
       console.error("Error creating plan:", error);
-      // alert("Failed to create plan. Please try again.");
     }
+  };
+  const handleDestinationChange = (place: destination) => {
+    setSelectedDestination((prev) => {
+      const currentSelection = prev || []; // Ensure prev is an array
+      if (currentSelection.includes(place)) {
+        return currentSelection.filter((p) => p !== place); // Deselect if already selected
+      }
+      return [...currentSelection, place]; // Select
+    });
+  };
+
+  const handleHotelChange = (hotel: hotel) => {
+    setSelectedHotel((prev) => {
+      const currentSelection = prev || []; // Ensure prev is an array
+      if (currentSelection.includes(hotel)) {
+        return currentSelection.filter((h) => h !== hotel); // Deselect if already selected
+      }
+      return [...currentSelection, hotel]; // Select
+    });
+  };
+
+  const handleTransportationChange = (transportation: transportation) => {
+    setSelectedTransportation((prev) => {
+      const currentSelection = prev || []; // Ensure prev is an array
+      if (currentSelection.includes(transportation)) {
+        return currentSelection.filter((t) => t !== transportation); // Deselect if already selected
+      }
+      return [...currentSelection, transportation]; // Select
+    });
   };
 
   return (
@@ -131,7 +153,7 @@ export default function TravelForm() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">budget</label>
+            <label className="block text-sm font-medium mb-1">Budget</label>
             <input
               type="text"
               value={budget}
@@ -141,30 +163,27 @@ export default function TravelForm() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Start-date</label>
+            <label className="block text-sm font-medium mb-1">Start date</label>
             <input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              min={1}
               className="w-full p-2 border rounded-md"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">end-date</label>
+            <label className="block text-sm font-medium mb-1">End date</label>
             <input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              min={1}
               className="w-full p-2 border rounded-md"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 disabled:opacity-50"
-          >
+            className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 disabled:opacity-50">
             {loading ? (
               <span className="flex items-center justify-center">
                 <Loader2 className="animate-spin mr-2" />
@@ -184,7 +203,16 @@ export default function TravelForm() {
             <div className="grid gap-4">
               {recommendations?.destination?.map((place, index) => (
                 <div key={index} className="p-4 border rounded-md">
-                  <h3 className="font-semibold">{place.name}</h3>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="destination"
+                      checked={selectedDestination?.includes(place)}
+                      onChange={() => handleDestinationChange(place)}
+                      className="mr-2"
+                    />
+                    <h3 className="font-semibold">{place.name}</h3>
+                  </label>
                   <p className="text-gray-600">{place.description}</p>
                 </div>
               ))}
@@ -196,7 +224,17 @@ export default function TravelForm() {
             <div className="grid gap-4">
               {recommendations?.hotel?.map((hotel, index) => (
                 <div key={index} className="p-4 border rounded-md">
-                  <h3 className="font-semibold">{hotel.name}</h3>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="hotel"
+                      value={hotel.name}
+                      checked={selectedHotel?.includes(hotel)}
+                      onChange={() => handleHotelChange(hotel)}
+                      className="mr-2"
+                    />
+                    <h3 className="font-semibold">{hotel.name}</h3>
+                  </label>
                   <p className="text-gray-600">{hotel.description}</p>
                   <div className="mt-2 flex justify-between text-sm">
                     <span>Rating: {hotel.rating}/5</span>
@@ -212,7 +250,17 @@ export default function TravelForm() {
             <div className="grid gap-4">
               {recommendations?.transportation?.map((transport, index) => (
                 <div key={index} className="p-4 border rounded-md">
-                  <h3 className="font-semibold">{transport.type}</h3>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="transportation"
+                      value={transport.type}
+                      checked={selectedTransportation?.includes(transport)}
+                      onChange={() => handleTransportationChange(transport)}
+                      className="mr-2"
+                    />
+                    <h3 className="font-semibold">{transport.type}</h3>
+                  </label>
                   <p className="text-gray-600">{transport.description}</p>
                   <div className="mt-2">
                     <span className="text-sm">Price: {transport.price}</span>
@@ -221,8 +269,14 @@ export default function TravelForm() {
               ))}
             </div>
           </section>
-          <button onClick={handleCreatePlan} className="btn btn-neutral">
-            create a plan
+
+          <button
+            onClick={handleCreatePlan}
+            className="btn btn-neutral"
+            disabled={
+              !selectedDestination || !selectedHotel || !selectedTransportation
+            }>
+            Create a Plan
           </button>
         </div>
       )}

@@ -38,7 +38,6 @@ class User {
     const register = await this.collection().insertOne(input);
     return register;
   }
-
 }
 
 export default User;

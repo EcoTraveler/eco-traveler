@@ -121,10 +121,7 @@ const Pricing = () => {
 
                 <ul className="space-y-2.5 leading-relaxed text-base flex-1">
                   {[
-                    { name: "NextJS boilerplate" },
-                    { name: "User oauth" },
-                    { name: "Database" },
-                    { name: "Emails" },
+                    { name: "free 20 recommendations" },
                     { name: "1 year of updates" },
                     { name: "24/7 support" },
                   ].map((feature, i) => (

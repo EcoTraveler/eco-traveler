@@ -40,7 +40,7 @@ const Pricing = () => {
     id: "",
     name: "",
     username: "",
-    email: "", // Default value or an empty string
+    email: "",
   });
 
   useEffect(() => {

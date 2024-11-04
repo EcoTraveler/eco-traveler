@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "EcoTraveler",
-  description: "Plan and book our perfect trip with expert advice, travel tips, destination information and inspiration from us",
+  description:
+    "Plan and book our perfect trip with expert advice, travel tips, destination information and inspiration from us",
   icons: {
     icon: "/assets/EcoTraveler.ico",
   },
@@ -15,9 +17,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <head>
-        <style>{`
+    <ClerkProvider>
+      <html lang="en">
+        <head>
+          <style>{`
           @keyframes gradientAnimation {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -56,13 +59,14 @@ export default function RootLayout({
             z-index: -1;
           }
         `}</style>
-      </head>
-      <body>
-        <div className="animated-bg"></div>
-        <div className="blur-overlay"></div>
-        <div className="white-overlay"></div>
-        <div className="relative z-10">{children}</div>
-      </body>
-    </html>
+        </head>
+        <body>
+          <div className="animated-bg"></div>
+          <div className="blur-overlay"></div>
+          <div className="white-overlay"></div>
+          <div className="relative z-10">{children}</div>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

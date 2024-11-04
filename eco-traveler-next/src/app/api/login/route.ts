@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     if (!user) throw { message: "invalid email/password", status: 401 };
     const validpass = compareTextWithHash(password, user.password);
     if (validpass === false || !validpass)
-      throw { message: "invalid email/password" };
+      throw { message: "invalid email/password", status: 401 };
     const payload = {
       id: user._id,
       name: user.name,

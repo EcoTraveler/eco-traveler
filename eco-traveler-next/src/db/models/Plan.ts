@@ -1,13 +1,12 @@
 import { ObjectId } from "mongodb";
 import { database } from "../config";
-// import { TraceState } from "next/dist/trace";
-// import OpenAI from "openai";
 
 export type destination = {
   _id: ObjectId;
   name: string;
   description: string;
 };
+
 export type Inputdestination = {
   _id: string;
   name: string;
@@ -20,6 +19,7 @@ export type transportation = {
   description: string;
   price: string;
 };
+
 export type Inputtransportation = {
   _id: string;
   type: string;
@@ -34,6 +34,7 @@ export type hotel = {
   rating: number;
   price: string;
 };
+
 export type Inputhotel = {
   _id: string;
   name: string;
@@ -47,9 +48,11 @@ export type aiResult = {
   transportation: transportation[];
   hotel: hotel[];
 };
+
 export type plan = {
   _id: ObjectId;
-  userId: ObjectId;
+  userId?: ObjectId;
+  clerkId: string;
   name: string;
   budget: string;
   destination?: destination[];
@@ -59,10 +62,12 @@ export type plan = {
   startDate: string;
   endDate: string;
 };
+
 export type resultInputPlan = Omit<plan, "_id">;
 
 export type inputPlan = {
-  userId: string; // Use string here for incoming data
+  userId?: string;
+  clerkId?: string;
   name: string;
   budget: string;
   destination?: Inputdestination[];
@@ -81,21 +86,22 @@ export const getPlanCollection = async () => {
 export const createPlan = async (plan: inputPlan) => {
   const modifierPlan: resultInputPlan = {
     ...plan,
-    userId: new ObjectId(plan.userId),
+    userId: plan.userId ? new ObjectId(plan.userId) : undefined,
+    clerkId: plan.clerkId ?? "",
     destination: plan.destination?.map(dest => ({
-      _id: new ObjectId(dest._id), // Convert _id to ObjectId
+      _id: new ObjectId(dest._id),
       name: dest.name,
       description: dest.description,
     })),
     hotel: plan.hotel?.map(h => ({
-      _id: new ObjectId(h._id), // Convert _id to ObjectId
+      _id: new ObjectId(h._id),
       name: h.name,
       description: h.description,
       rating: h.rating,
       price: h.price,
     })),
     transportation: plan.transportation?.map(trans => ({
-      _id: new ObjectId(trans._id), // Convert _id to ObjectId
+      _id: new ObjectId(trans._id),
       type: trans.type,
       description: trans.description,
       price: trans.price,
@@ -103,13 +109,13 @@ export const createPlan = async (plan: inputPlan) => {
   };
   console.log(modifierPlan);
 
-  const Plan = getPlanCollection();
-  const result = (await Plan).insertOne(modifierPlan); // Use modifierPlan here
+  const Plan = await getPlanCollection();
+  const result = await Plan.insertOne(modifierPlan);
   return result;
 };
 
 export const getPlans = async (): Promise<plan[]> => {
-  const Plan = getPlanCollection();
-  const result = (await Plan).find().toArray() as unknown as plan[];
+  const Plan = await getPlanCollection();
+  const result = (await Plan.find().toArray()) as plan[];
   return result;
 };

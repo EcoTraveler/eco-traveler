@@ -1,40 +1,43 @@
-import { NextResponse } from "next/server";
-import { createDiscussion } from "@/db/models/Discussion";
-import { ObjectId } from "mongodb";
-import { v2 as cloudinary } from "cloudinary";
+import { NextResponse } from 'next/server';
+import { database } from '@/db/config';
+import { ObjectId } from 'mongodb';
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const planningId = searchParams.get('planningId');
 
-export async function POST(request: Request) {
-  const formData = await request.formData();
-  const userId = formData.get("userId") as string;
-  const planningId = formData.get("planningId") as string;
-  let message = formData.get("message") as string;
-  const file = formData.get("file") as File | null;
-
-  if (file) {
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    const result = await new Promise((resolve, reject) => {
-      cloudinary.uploader
-        .upload_stream({ resource_type: "auto" }, (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
-        })
-        .end(buffer);
-    });
-    message = (result as any).secure_url;
+  if (!planningId) {
+    return NextResponse.json({ error: 'PlanningId is required' }, { status: 400 });
   }
 
-  const discussion = await createDiscussion({
-    userId: new ObjectId(userId),
-    planningId: new ObjectId(planningId),
-    message,
-  });
+  try {
+    const messages = await database.collection('Discussions')
+      .find({ planningId })
+      .sort({ _id: 1 })
+      .toArray();
 
-  return NextResponse.json(discussion);
+    return NextResponse.json(messages);
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to fetch messages' }, { status: 500 });
+  }
+}
+
+export async function POST(request: Request) {
+  const { planningId, clerkId, message } = await request.json();
+
+  if (!planningId || !clerkId || !message) {
+    return NextResponse.json({ error: 'PlanningId, clerkId, and message are required' }, { status: 400 });
+  }
+
+  try {
+    const result = await database.collection('Discussions').insertOne({
+      planningId,
+      clerkId,
+      message,
+    });
+
+    return NextResponse.json({ id: result.insertedId, message: 'Message sent successfully' });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to send message' }, { status: 500 });
+  }
 }

@@ -22,9 +22,8 @@ export default function TravelForm() {
   const [recommendations, setRecommendations] = useState<aiResult | null>(null);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  const { user } = useUser();
+  useUser();
 
-  console.log(user?.id.split("_")[1]);
   const handleRecommendation = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -69,7 +68,6 @@ export default function TravelForm() {
         },
         body: JSON.stringify({
           name,
-          userId: "67224e9880f07c7d2023af17",
           duration,
           destination,
           transportation,
@@ -84,7 +82,7 @@ export default function TravelForm() {
 
       if (response.ok) {
         setMessage({ type: "success", text: "Plan created successfully!" });
-        // Optionally reset form or navigate to another page
+        // Reset form or navigate to another page if needed
       } else {
         setMessage({ type: "error", text: result.error || "Failed to create plan. Please try again." });
       }
@@ -153,9 +151,13 @@ export default function TravelForm() {
               <CardContent>
                 <div className="grid gap-4">
                   {recommendations.destination?.map((place, index) => (
-                    <div key={index} className="p-4 border rounded-md">
-                      <h3 className="font-semibold">{place.name}</h3>
-                      <p className="text-sm text-muted-foreground">{place.description}</p>
+                    <div key={index} className="p-4 border rounded-md flex items-center space-x-4">
+                      <div className="flex-grow">
+                        <Label htmlFor={`place-${index}`} className="font-semibold">
+                          {place.name}
+                        </Label>
+                        <p className="text-sm text-muted-foreground">{place.description}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -169,12 +171,16 @@ export default function TravelForm() {
               <CardContent>
                 <div className="grid gap-4">
                   {recommendations.hotel?.map((hotel, index) => (
-                    <div key={index} className="p-4 border rounded-md">
-                      <h3 className="font-semibold">{hotel.name}</h3>
-                      <p className="text-sm text-muted-foreground">{hotel.description}</p>
-                      <div className="mt-2 flex justify-between text-sm">
-                        <span>Rating: {hotel.rating}/5</span>
-                        <span>Price: {hotel.price}</span>
+                    <div key={index} className="p-4 border rounded-md flex items-center space-x-4">
+                      <div className="flex-grow">
+                        <Label htmlFor={`hotel-${index}`} className="font-semibold">
+                          {hotel.name}
+                        </Label>
+                        <p className="text-sm text-muted-foreground">{hotel.description}</p>
+                        <div className="mt-2 flex justify-between text-sm">
+                          <span>Rating: {hotel.rating}/5</span>
+                          <span>Price: {hotel.price}</span>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -189,11 +195,15 @@ export default function TravelForm() {
               <CardContent>
                 <div className="grid gap-4">
                   {recommendations.transportation?.map((transport, index) => (
-                    <div key={index} className="p-4 border rounded-md">
-                      <h3 className="font-semibold">{transport.type}</h3>
-                      <p className="text-sm text-muted-foreground">{transport.description}</p>
-                      <div className="mt-2">
-                        <span className="text-sm">Price: {transport.price}</span>
+                    <div key={index} className="p-4 border rounded-md flex items-center space-x-4">
+                      <div className="flex-grow">
+                        <Label htmlFor={`transport-${index}`} className="font-semibold">
+                          {transport.type}
+                        </Label>
+                        <p className="text-sm text-muted-foreground">{transport.description}</p>
+                        <div className="mt-2">
+                          <span className="text-sm">Price: {transport.price}</span>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -202,7 +212,7 @@ export default function TravelForm() {
             </Card>
 
             <Button onClick={handleCreatePlan} className="w-full bg-green-500 hover:bg-green-600">
-              Create Plan
+              Create Plan with Selected Items
             </Button>
           </div>
         )}

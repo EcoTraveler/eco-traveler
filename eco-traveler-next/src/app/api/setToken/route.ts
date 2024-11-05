@@ -60,3 +60,20 @@ export async function PATCH(request: Request) {
     return errHandler(error);
   }
 }
+export async function PUT(request: Request) {
+  try {
+    const { clerkId, tokens } = await request.json();
+    const findUser = await database.collection("SetToken").findOne({ clerkId });
+    if (!findUser) throw { message: "User Not Found", status: 401 };
+    const tokenUser = findUser.tokens - tokens;
+    const setToken = await database
+      .collection("SetToken")
+      .updateOne({ clerkId }, { $set: { tokens: tokenUser } });
+    return new Response(
+      JSON.stringify({ message: "Tokens updated successfully" }),
+      { status: 200 }
+    );
+  } catch (error) {
+    return errHandler(error);
+  }
+}

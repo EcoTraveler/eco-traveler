@@ -1,44 +1,70 @@
 "use client";
 
-import PPbuttons from "@/components/Paypal";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Check } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import PPbuttons from "@/components/Paypal";
 
-const TokenPurchase: React.FC = () => {
-  const [price, setPrice] = useState("");
-  const [tokens, setTokens] = useState(0);
+const PricingPage = () => {
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [statusToken, setStatusToken] = useState(true);
   const router = useRouter();
-  const clerkId = useUser();
-  const userId = clerkId.user?.id;
+  const { user } = useUser();
+  const userId = user?.id;
 
-  const options = [
-    { price: "5.00", tokens: 100, description: "100 Tokens" },
-    { price: "10.00", tokens: 250, description: "200 Tokens (+50 Bonus)" },
+  const plans = [
+    {
+      name: "Free Trial",
+      price: "0",
+      tokens: 5,
+      features: ["Access to basic features", "5 AI-powered recommendations", "24/7 customer support"],
+      description: "Perfect for trying out our service",
+    },
+    {
+      name: "Basic",
+      price: "5.00",
+      tokens: 100,
+      features: ["All Free Trial features", "100 AI-powered recommendations", "Priority customer support"],
+      description: "Great for occasional travelers",
+    },
+    {
+      name: "Pro",
+      price: "10.00",
+      tokens: 250,
+      features: ["All Basic features", "250 AI-powered recommendations", "Exclusive travel deals", "Personal travel consultant"],
+      description: "Ideal for frequent travelers",
+    },
   ];
+
+  useEffect(() => {
+    const getTokenStatus = async () => {
+      try {
+        const status = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/setToken?userId=${userId}`, { method: "GET" });
+        const data = await status?.json();
+        if (status.ok) {
+          setStatusToken(data?.freeToken);
+        }
+      } catch (error) {
+        console.error("Failed to get token status:", error);
+      }
+    };
+    if (userId) getTokenStatus();
+  }, [userId]);
 
   const handleFreeToken = async () => {
     try {
-      const freeToken = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/setToken`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            clerkId: userId,
-            tokens: 5,
-            freeToken: false,
-          }),
-        }
-      );
-      if (freeToken.ok) {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/setToken`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ clerkId: userId, tokens: 5, freeToken: false }),
+      });
+      if (response.ok) {
         toast({
           title: "Success!",
           description: "You've received 5 free tokens!",
@@ -57,23 +83,17 @@ const TokenPurchase: React.FC = () => {
     }
   };
 
-  const handleSuccess = async (details: any) => {
-    console.log("Transaction completed by: ", details.payer.name.given_name);
+  const handleSuccess = async (details: any, plan: any) => {
     try {
-      const setToken = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/setToken`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ clerkId: userId, tokens }),
-        }
-      );
-      if (setToken.ok) {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/setToken`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ clerkId: userId, tokens: plan.tokens }),
+      });
+      if (response.ok) {
         toast({
           title: "Purchase Successful!",
-          description: `You've successfully purchased ${tokens} tokens!`,
+          description: `You've successfully purchased ${plan.tokens} tokens!`,
           variant: "default",
         });
         router.push("/");
@@ -81,7 +101,7 @@ const TokenPurchase: React.FC = () => {
         throw new Error("Failed to set tokens after purchase");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast({
         title: "Error",
         description: "Failed to process your purchase. Please try again.",
@@ -90,93 +110,56 @@ const TokenPurchase: React.FC = () => {
     }
   };
 
-  const handleSelectOption = (option: {
-    price: string;
-    tokens: number;
-    description: string;
-  }) => {
-    setPrice(option.price);
-    setTokens(option.tokens);
-  };
-
-  useEffect(() => {
-    const getTokenStatus = async () => {
-      try {
-        const status = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/setToken?userId=${userId}`,
-          { method: "GET" }
-        );
-        const data = await status?.json();
-        console.log(data);
-
-        if (status.ok) {
-          setStatusToken(data?.freeToken);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getTokenStatus();
-  }, [userId]);
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
-      <h1 className="text-3xl font-semibold mb-8 text-gray-800">
-        Purchase Tokens
-      </h1>
-
-      <motion.div
-        initial={{ x: -50, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        exit={{ x: -50, opacity: 0 }}
-        transition={{ type: "spring", stiffness: 100, damping: 20 }}
-      >
-        <Link
-          href="/"
-          className="absolute top-4 left-4 p-2 bg-white rounded-full shadow hover:shadow-md transition-shadow duration-200"
-          aria-label="Back to Home"
-        >
-          <motion.div
-            whileHover={{ scale: 1.2 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            <ArrowLeft className="w-6 h-6 text-green-500" />
-          </motion.div>
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white p-4">
+      <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ type: "spring", stiffness: 100, damping: 20 }} className="absolute top-4 left-4">
+        <Link href="/">
+          <Button variant="ghost" size="icon" className="rounded-full">
+            <ArrowLeft className="h-6 w-6 text-green-600" />
+          </Button>
         </Link>
       </motion.div>
 
-      <div className="flex flex-col space-y-6">
-        {statusToken ? (
-          <button
-            onClick={handleFreeToken}
-            className="p-4 w-64 border-2 rounded-lg text-lg font-medium transition-colors duration-200 bg-green-500 text-white hover:bg-green-600"
-          >
-            Get 5 Free Tokens
-          </button>
-        ) : (
-          options.map((option) => (
-            <button
-              key={option.price}
-              onClick={() => handleSelectOption(option)}
-              className={`p-4 w-64 border-2 rounded-lg text-lg font-medium transition-colors duration-200 ${
-                price === option.price
-                  ? "bg-blue-500 text-white"
-                  : "bg-white text-blue-500 border-blue-500 hover:bg-blue-100"
-              }`}
-            >
-              ${option.price} - {option.description}
-            </button>
-          ))
-        )}
-      </div>
+      <div className="max-w-6xl mx-auto pt-16">
+        <h1 className="text-4xl font-bold text-center text-green-800 mb-4">Choose Your Travel Plan</h1>
+        <p className="text-xl text-center text-gray-600 mb-12">Unlock the power of AI-driven travel recommendations</p>
 
-      {price && (
-        <div className="mt-8">
-          <PPbuttons amount={price} onSuccess={handleSuccess} />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {plans.map(plan => (
+            <Card key={plan.name} className={`${selectedPlan === plan.name ? "border-green-500 shadow-lg" : "border-gray-200"} transition-all duration-300`}>
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold text-green-700">{plan.name}</CardTitle>
+                <CardDescription>{plan.description}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-4xl font-bold text-gray-900 mb-4">
+                  ${plan.price}
+                  <span className="text-base font-normal text-gray-600"> / {plan.tokens} token</span>
+                </p>
+                <ul className="space-y-2">
+                  {plan.features.map((feature, index) => (
+                    <li key={index} className="flex items-center">
+                      <Check className="h-5 w-5 text-green-500 mr-2" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+              <CardFooter>
+                {plan.name === "Free Trial" && statusToken ? (
+                  <Button onClick={handleFreeToken} className="w-full bg-green-500 hover:bg-green-600 text-white">
+                    Get {plan.tokens} Free Tokens
+                  </Button>
+                ) : (
+                  plan.name !== "Free Trial" && <PPbuttons amount={plan.price} onSuccess={(details: any) => handleSuccess(details, plan)} />
+                )}
+              </CardFooter>
+            </Card>
+          ))}
         </div>
-      )}
+      </div>
     </div>
   );
 };
 
-export default TokenPurchase;
+export default PricingPage;

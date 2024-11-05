@@ -12,10 +12,6 @@ export default function Footer() {
                 links: ["About Us", "Careers", "Press", "Blog"],
               },
               {
-                title: "Support",
-                links: ["Help Center", "Safety", "Cancellation", "COVID-19"],
-              },
-              {
                 title: "Legal",
                 links: ["Terms", "Privacy", "Cookie Settings", "Guidelines"],
               },

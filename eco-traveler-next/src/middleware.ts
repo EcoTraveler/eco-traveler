@@ -5,6 +5,7 @@ import { verifyToken } from "./db/utils/jwt";
 const isProtectedRoute = createRouteMatcher([
   "/plannings",
   "/ai-recommendation",
+  "/paypal"
 ]);
 const isApiRoute = createRouteMatcher(["/api/posts/[posts]"]);
 

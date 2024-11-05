@@ -22,7 +22,6 @@ export default function TravelForm() {
   const [recommendations, setRecommendations] = useState<aiResult | null>(null);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  useUser();
 
   const handleRecommendation = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

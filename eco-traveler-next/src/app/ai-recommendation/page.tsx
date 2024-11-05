@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useUser } from "@clerk/nextjs";
 import Footer from "@/components/Footer";
 
@@ -22,9 +21,6 @@ export default function TravelForm() {
   const [endDate, setEndDate] = useState("");
   const [recommendations, setRecommendations] = useState<aiResult | null>(null);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
-  const [selectedDestinations, setSelectedDestinations] = useState<any[]>([]); // Ubah menjadi array objek
-  const [selectedHotels, setSelectedHotels] = useState<any[]>([]); // Ubah menjadi array objek
-  const [selectedTransportation, setSelectedTransportation] = useState<any[]>([]); // Ubah menjadi array objek
 
   useUser();
 
@@ -48,10 +44,6 @@ export default function TravelForm() {
 
       const data = await response.json();
       setRecommendations(data);
-      // Reset selections when new recommendations are loaded
-      setSelectedDestinations([]);
-      setSelectedHotels([]);
-      setSelectedTransportation([]);
     } catch (error) {
       console.error("Error:", error);
       setMessage({ type: "error", text: "Failed to get recommendations. Please try again." });
@@ -66,11 +58,7 @@ export default function TravelForm() {
       return;
     }
 
-    const { destination } = recommendations;
-
-    // Ambil hotel dan transportasi yang dipilih
-    const selectedHotel = selectedHotels.length > 0 ? selectedHotels : [recommendations.hotel[0]]; // Ambil objek hotel pertama jika tidak ada yang dipilih
-    const selectedTransport = selectedTransportation.length > 0 ? selectedTransportation : [recommendations.transportation[0]]; // Ambil objek transportasi pertama jika tidak ada yang dipilih
+    const { destination, transportation, hotel } = recommendations;
 
     try {
       const response = await fetch("/api/plan", {
@@ -82,8 +70,8 @@ export default function TravelForm() {
           name,
           duration,
           destination,
-          transportation: selectedTransport,
-          hotel: selectedHotel,
+          transportation,
+          hotel,
           budget,
           startDate,
           endDate,
@@ -101,20 +89,6 @@ export default function TravelForm() {
     } catch (error) {
       console.error("Error creating plan:", error);
       setMessage({ type: "error", text: "An unexpected error occurred. Please try again." });
-    }
-  };
-
-  const handleSelectionChange = (type: "destination" | "hotel" | "transportation", item: any, isChecked: boolean) => {
-    switch (type) {
-      case "destination":
-        setSelectedDestinations(prev => (isChecked ? [...prev, item] : prev.filter(i => i.id !== item.id)));
-        break;
-      case "hotel":
-        setSelectedHotels(prev => (isChecked ? [...prev, item] : prev.filter(i => i.id !== item.id)));
-        break;
-      case "transportation":
-        setSelectedTransportation(prev => (isChecked ? [...prev, item] : prev.filter(i => i.id !== item.id)));
-        break;
     }
   };
 
@@ -178,7 +152,6 @@ export default function TravelForm() {
                 <div className="grid gap-4">
                   {recommendations.destination?.map((place, index) => (
                     <div key={index} className="p-4 border rounded-md flex items-center space-x-4">
-                      <Checkbox id={`place-${index}`} checked={selectedDestinations.some(i => i.id === place._id)} onCheckedChange={checked => handleSelectionChange("destination", place, checked as boolean)} />
                       <div className="flex-grow">
                         <Label htmlFor={`place-${index}`} className="font-semibold">
                           {place.name}
@@ -199,7 +172,6 @@ export default function TravelForm() {
                 <div className="grid gap-4">
                   {recommendations.hotel?.map((hotel, index) => (
                     <div key={index} className="p-4 border rounded-md flex items-center space-x-4">
-                      <Checkbox id={`hotel-${index}`} checked={selectedHotels.some(i => i.id === hotel._id)} onCheckedChange={checked => handleSelectionChange("hotel", hotel, checked as boolean)} />
                       <div className="flex-grow">
                         <Label htmlFor={`hotel-${index}`} className="font-semibold">
                           {hotel.name}
@@ -224,7 +196,6 @@ export default function TravelForm() {
                 <div className="grid gap-4">
                   {recommendations.transportation?.map((transport, index) => (
                     <div key={index} className="p-4 border rounded-md flex items-center space-x-4">
-                      <Checkbox id={`transport-${index}`} checked={selectedTransportation.some(i => i.id === transport._id)} onCheckedChange={checked => handleSelectionChange("transportation", transport, checked as boolean)} />
                       <div className="flex-grow">
                         <Label htmlFor={`transport-${index}`} className="font-semibold">
                           {transport.type}

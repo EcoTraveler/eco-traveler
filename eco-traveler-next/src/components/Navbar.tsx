@@ -30,7 +30,6 @@ export default function Navbar() {
               <NavLink href="/plannings">List Plannings</NavLink>
               <NavLink href="/ai-recommendation">AI Recommendation</NavLink>
               <NavLink href="/about">About</NavLink>
-              <NavLink href="/contact">Contact</NavLink>
             </div>
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-2">

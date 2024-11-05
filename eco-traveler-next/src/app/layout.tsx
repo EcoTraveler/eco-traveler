@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "EcoTraveler",
@@ -59,12 +60,14 @@ export default function RootLayout({
             z-index: -1;
           }
         `}</style>
+        
         </head>
         <body>
           <div className="animated-bg"></div>
           <div className="blur-overlay"></div>
           <div className="white-overlay"></div>
-          <div className="relative z-10">{children}</div>
+      <Toaster />
+      <div className="relative z-10">{children}</div>
         </body>
       </html>
     </ClerkProvider>

@@ -1,105 +1,182 @@
 "use client";
-import { useEffect, useState } from "react";
-import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 
-const PaypalPage = () => {
-  const [selectedAmount, setSelectedAmount] = useState<number>(5);
-  const [tokens, setTokens] = useState<number>(100);
-  const [scriptLoaded, setScriptLoaded] = useState(false);
+import PPbuttons from "@/components/Paypal";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { ArrowLeft } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
+import { toast } from "@/hooks/use-toast";
 
-  const paypalScript = () => {
-    if (window.paypal) {
-      setScriptLoaded(true);
-      return;
+const TokenPurchase: React.FC = () => {
+  const [price, setPrice] = useState("");
+  const [tokens, setTokens] = useState(0);
+  const [statusToken, setStatusToken] = useState(true);
+  const router = useRouter();
+  const clerkId = useUser();
+  const userId = clerkId.user?.id;
+
+  const options = [
+    { price: "5.00", tokens: 100, description: "100 Tokens" },
+    { price: "10.00", tokens: 250, description: "200 Tokens (+50 Bonus)" },
+  ];
+
+  const handleFreeToken = async () => {
+    try {
+      const freeToken = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/setToken`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            clerkId: userId,
+            tokens: 5,
+            freeToken: false,
+          }),
+        }
+      );
+      if (freeToken.ok) {
+        toast({
+          title: "Success!",
+          description: "You've received 5 free tokens!",
+          variant: "default",
+        });
+        router.push("/");
+      } else {
+        throw new Error("Failed to get free tokens");
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to get free tokens. Please try again.",
+        variant: "destructive",
+      });
     }
-    const script = document.createElement("script");
-    script.src =
-      "https://sandbox.paypal.com/sdk/js?client-id=Ae-TE-n5Zp3Wp-c8O94orElRqXc7ahEnlHnBplRyF6K0x9qC37cyNymubedDKIWqIkoN2PlIa19DIjZD";
-    script.type = "text/javascript";
-    script.async = true;
-    script.onload = () => {
-      setScriptLoaded(true);
-    };
-    document.body.appendChild(script);
   };
 
-  const handleSelection = (amount: number, tokenCount: number) => {
-    setSelectedAmount(amount);
-    setTokens(tokenCount);
+  const handleSuccess = async (details: any) => {
+    console.log("Transaction completed by: ", details.payer.name.given_name);
+    try {
+      const setToken = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/setToken`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ clerkId: userId, tokens }),
+        }
+      );
+      if (setToken.ok) {
+        toast({
+          title: "Purchase Successful!",
+          description: `You've successfully purchased ${tokens} tokens!`,
+          variant: "default",
+        });
+        router.push("/");
+      } else {
+        throw new Error("Failed to set tokens after purchase");
+      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Error",
+        description: "Failed to process your purchase. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleSelectOption = (option: {
+    price: string;
+    tokens: number;
+    description: string;
+  }) => {
+    setPrice(option.price);
+    setTokens(option.tokens);
   };
 
   useEffect(() => {
-    paypalScript();
-  }, []);
+    const getTokenStatus = async () => {
+      try {
+        const status = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/setToken?userId=${userId}`,
+          { method: "GET" }
+        );
+        const data = await status?.json();
+        console.log(data);
+
+        if (status.ok) {
+          setStatusToken(data?.freeToken);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getTokenStatus();
+  }, [userId]);
 
   return (
-    <PayPalScriptProvider
-      options={{
-        "client-id":
-          "Ae-TE-n5Zp3Wp-c8O94orElRqXc7ahEnlHnBplRyF6K0x9qC37cyNymubedDKIWqIkoN2PlIa19DIjZD",
-      }}
-    >
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="w-full max-w-md p-8 space-y-4 bg-white rounded shadow-lg">
-          <h1 className="text-2xl font-semibold text-center text-gray-800">
-            Pembayaran PayPal
-          </h1>
-          <p className="text-center text-gray-600">
-            Pilih paket token yang ingin Anda beli melalui PayPal.
-          </p>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+      <h1 className="text-3xl font-semibold mb-8 text-gray-800">
+        Purchase Tokens
+      </h1>
 
-          <div className="mt-4 space-y-2">
+      <motion.div
+        initial={{ x: -50, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: -50, opacity: 0 }}
+        transition={{ type: "spring", stiffness: 100, damping: 20 }}
+      >
+        <Link
+          href="/"
+          className="absolute top-4 left-4 p-2 bg-white rounded-full shadow hover:shadow-md transition-shadow duration-200"
+          aria-label="Back to Home"
+        >
+          <motion.div
+            whileHover={{ scale: 1.2 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <ArrowLeft className="w-6 h-6 text-green-500" />
+          </motion.div>
+        </Link>
+      </motion.div>
+
+      <div className="flex flex-col space-y-6">
+        {statusToken ? (
+          <button
+            onClick={handleFreeToken}
+            className="p-4 w-64 border-2 rounded-lg text-lg font-medium transition-colors duration-200 bg-green-500 text-white hover:bg-green-600"
+          >
+            Get 5 Free Tokens
+          </button>
+        ) : (
+          options.map((option) => (
             <button
-              onClick={() => handleSelection(5, 100)}
-              className={`w-full px-4 py-2 font-semibold border rounded ${
-                selectedAmount === 5
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-700 border-gray-300"
-              } hover:bg-blue-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              key={option.price}
+              onClick={() => handleSelectOption(option)}
+              className={`p-4 w-64 border-2 rounded-lg text-lg font-medium transition-colors duration-200 ${
+                price === option.price
+                  ? "bg-blue-500 text-white"
+                  : "bg-white text-blue-500 border-blue-500 hover:bg-blue-100"
+              }`}
             >
-              $5 untuk 100 token
+              ${option.price} - {option.description}
             </button>
-
-            <button
-              onClick={() => handleSelection(10, 200)}
-              className={`w-full px-4 py-2 font-semibold border rounded ${
-                selectedAmount === 10
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-700 border-gray-300"
-              } hover:bg-blue-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
-            >
-              $10 untuk 200 token
-            </button>
-          </div>
-
-          {scriptLoaded ? (
-            <PayPalButtons
-              createOrder={(data, actions) => {
-                return actions.order.create({
-                  purchase_units: [
-                    {
-                      amount: {
-                        value: selectedAmount.toString(),
-                      },
-                    },
-                  ],
-                });
-              }}
-              onApprove={(data, actions) => {
-                return actions?.order?.capture().then((details) => {
-                  alert(
-                    `Pembayaran berhasil! Terima kasih, ${details?.payer?.name?.given_name}!`
-                  );
-                });
-              }}
-            />
-          ) : (
-            <span>Loading....</span>
-          )}
-        </div>
+          ))
+        )}
       </div>
-    </PayPalScriptProvider>
+
+      {price && (
+        <div className="mt-8">
+          <PPbuttons amount={price} onSuccess={handleSuccess} />
+        </div>
+      )}
+    </div>
   );
 };
 
-export default PaypalPage;
+export default TokenPurchase;

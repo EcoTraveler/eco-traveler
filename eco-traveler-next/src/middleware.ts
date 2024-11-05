@@ -2,11 +2,7 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "./db/utils/jwt";
 
-const isProtectedRoute = createRouteMatcher([
-  "/plannings",
-  "/ai-recommendation",
-  "/paypal"
-]);
+const isProtectedRoute = createRouteMatcher(["/plannings", "/ai-recommendation", "/paypal"]);
 const isApiRoute = createRouteMatcher(["/api/posts/[posts]"]);
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
@@ -23,19 +19,13 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
     const authHeader = req.headers.get("Authorization");
 
     if (!authHeader) {
-      return NextResponse.json(
-        { message: "Please login first" },
-        { status: 401 }
-      );
+      return NextResponse.json({ message: "Please login first" }, { status: 401 });
     }
 
     const [type, token] = authHeader.split(" ");
 
     if (type !== "Bearer") {
-      return NextResponse.json(
-        { message: "Invalid credential" },
-        { status: 401 }
-      );
+      return NextResponse.json({ message: "Invalid credential" }, { status: 401 });
     }
 
     try {

@@ -105,6 +105,21 @@ export default function TravelForm() {
       } else {
         setMessage({ type: "error", text: result.error || "Failed to create plan. Please try again." });
       }
+
+      const tokenResponse = await fetch("/api/setToken", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          clerkId: userId,
+          tokens: 1, // Assuming 1 token per recommendation
+        }),
+      });
+
+      if (!tokenResponse.ok) {
+        throw new Error("Failed to update tokens");
+      }
     } catch (error) {
       console.error("Error creating plan:", error);
       setMessage({ type: "error", text: "An unexpected error occurred. Please try again." });

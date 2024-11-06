@@ -4,7 +4,7 @@ import OpenAI from "openai";
 
 // Inisialisasi OpenAI client
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY, // Pastikan ini diatur di environment variables
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 export async function POST(req: Request) {
@@ -27,12 +27,12 @@ export async function POST(req: Request) {
     });
 
     // Parse the AI response as JSON
-    const recommendations = JSON.parse(
-      completion.choices[0].message.content || "{}"
-    );
+    const recommendations = JSON.parse(completion.choices[0].message.content || "{}");
 
     return NextResponse.json(recommendations);
   } catch (error) {
+    console.log(error);
+
     return errHandler(error);
   }
 }

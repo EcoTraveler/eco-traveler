@@ -79,6 +79,17 @@ export default function PlannerList() {
     return planningUser ? planningUser.status : "Join";
   };
 
+  const getButtonText = (plan: Plan) => {
+    if (plan.clerkId === user?.id) return "Your Plan";
+    const status = getPlanStatus(plan._id);
+    if (status === "pending") return "Pending";
+    return "Join";
+  };
+
+  const isButtonDisabled = (plan: Plan) => {
+    return plan.clerkId === user?.id || getPlanStatus(plan._id) === "pending";
+  };
+
   const filteredPlans = plans.filter(plan => plan.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
@@ -136,9 +147,9 @@ export default function PlannerList() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button onClick={() => joinPlan(plan._id)} disabled={plan.clerkId === user?.id || getPlanStatus(plan._id) === "pending"} className="w-full">
+                <Button onClick={() => joinPlan(plan._id)} disabled={isButtonDisabled(plan)} className="w-full">
                   <Users className="mr-2 h-4 w-4" />
-                  {plan.clerkId === user?.id ? "Your Plan" : getPlanStatus(plan._id)}
+                  {getButtonText(plan)}
                 </Button>
               </CardFooter>
             </Card>

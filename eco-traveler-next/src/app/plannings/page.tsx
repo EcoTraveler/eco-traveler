@@ -4,7 +4,7 @@ import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, MapPin, Users, Clock, Plane, Hotel, Bus, Wallet } from "lucide-react";
+import { Calendar, MapPin, Users, Clock, Plane, Hotel, Bus, Wallet, Loader2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { Input } from "@/components/ui/input";
 import Footer from "@/components/Footer";
@@ -39,6 +39,7 @@ export default function PlannerList() {
   const [plans, setPlans] = useState<Plan[]>([]);
   const [planningUsers, setPlanningUsers] = useState<PlanningUser[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchPlans();
@@ -48,29 +49,47 @@ export default function PlannerList() {
   }, [user]);
 
   const fetchPlans = async () => {
-    const response = await fetch("/api/plans");
-    const data = await response.json();
-    setPlans(data);
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/plans");
+      const data = await response.json();
+      setPlans(data);
+    } catch (error) {
+      console.error("Failed to fetch plans:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const fetchPlanningUsers = async () => {
-    const response = await fetch(`/api/planning-users?clerkId=${user?.id}`);
-    const data = await response.json();
-    setPlanningUsers(data);
+    try {
+      const response = await fetch(`/api/planning-users?clerkId=${user?.id}`);
+      const data = await response.json();
+      setPlanningUsers(data);
+    } catch (error) {
+      console.error("Failed to fetch planning users:", error);
+    }
   };
 
   const joinPlan = async (planId: string) => {
     if (!user) return;
 
-    const response = await fetch("/api/plans", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ planId, clerkId: user.id, name: user.fullName }),
-    });
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/plans", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ planId, clerkId: user.id, name: user.fullName }),
+      });
 
-    if (response.ok) {
-      const newPlanningUser = await response.json();
-      setPlanningUsers(prevUsers => [...prevUsers, newPlanningUser]);
+      if (response.ok) {
+        const newPlanningUser = await response.json();
+        setPlanningUsers(prevUsers => [...prevUsers, newPlanningUser]);
+      }
+    } catch (error) {
+      console.error("Failed to join plan:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -79,12 +98,28 @@ export default function PlannerList() {
     return planningUser ? planningUser.status : "Join";
   };
 
+  const getButtonText = (plan: Plan) => {
+    if (plan.clerkId === user?.id) return "Your Plan";
+    const status = getPlanStatus(plan._id);
+    if (status === "pending") return "Pending";
+    return "Join";
+  };
+
+  const isButtonDisabled = (plan: Plan) => {
+    return plan.clerkId === user?.id || getPlanStatus(plan._id) === "pending";
+  };
+
   const filteredPlans = plans.filter(plan => plan.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
     <>
       <Navbar />
-      <main className="flex-grow container mx-auto p-4">
+      <main className="flex-grow container mx-auto p-4 relative min-h-screen">
+        {isLoading && (
+          <div className="absolute inset-0 bg-transparent bg-opacity-75 flex items-center justify-center z-50">
+            <Loader2 className="h-16 w-16 animate-spin text-green-500" />
+          </div>
+        )}
         <h1 className="text-3xl font-bold mb-6 text-center">Discover Amazing Travel Plans</h1>
         <div className="flex flex-col md:flex-row justify-center items-center mb-6 space-y-4 md:space-y-0 md:space-x-4">
           <Input placeholder="Search plans..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="max-w-sm" />
@@ -136,9 +171,9 @@ export default function PlannerList() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button onClick={() => joinPlan(plan._id)} disabled={plan.clerkId === user?.id || getPlanStatus(plan._id) === "pending"} className="w-full">
+                <Button onClick={() => joinPlan(plan._id)} disabled={isButtonDisabled(plan) || isLoading} className="w-full">
                   <Users className="mr-2 h-4 w-4" />
-                  {plan.clerkId === user?.id ? "Your Plan" : getPlanStatus(plan._id)}
+                  {getButtonText(plan)}
                 </Button>
               </CardFooter>
             </Card>

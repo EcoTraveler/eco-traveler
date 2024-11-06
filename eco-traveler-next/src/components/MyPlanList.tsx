@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { CalendarIcon, Wallet, ClockIcon, TrashIcon, EyeIcon } from "lucide-react";
+import { CalendarIcon, Wallet, ClockIcon, TrashIcon, EyeIcon, Coins } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,6 +19,8 @@ export default function MyPlanList() {
   const { user } = useUser();
   const clerkId = user?.id;
   const [plans, setPlans] = useState<planDetail[]>([]);
+  const [hasToken, setHasToken] = useState(true);
+  const [token, setToken] = useState(0);
 
   async function deletePlan(id: string) {
     try {
@@ -65,6 +67,24 @@ export default function MyPlanList() {
   }
 
   useEffect(() => {
+    const getTokenStatus = async () => {
+      try {
+        const status = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/setToken?userId=${clerkId}`, { method: "GET" });
+        const data = await status?.json();
+        console.log(data);
+
+        if (status.ok) {
+          setToken(data?.tokens);
+          setHasToken(data?.freeToken);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getTokenStatus();
+  }, [clerkId]);
+
+  useEffect(() => {
     if (!clerkId) {
       return;
     }
@@ -73,17 +93,26 @@ export default function MyPlanList() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">My Plans</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">My Plans</h1>
+        <Card className="flex items-center p-2 bg-green-50 border-green-200">
+          <Coins className="h-6 w-6 text-yellow-500 mr-2" />
+          <div>
+            <CardTitle className="text-sm text-green-700">My Tokens</CardTitle>
+            <p className="text-2xl font-bold text-green-800">{token}</p>
+          </div>
+        </Card>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {Array.isArray(plans) &&
           plans.map(plan => (
             <Card key={plan._id.toString()} className="flex flex-col">
               <CardHeader>
-                <CardTitle className="text-xl flex items-center justify-between">{plan.name}</CardTitle>
+                <CardTitle className="text-xl flex items-center justify-between capitalize">{plan.name}</CardTitle>
               </CardHeader>
               <CardContent className="flex-grow">
                 <div className="space-y-2">
-                  {/* Format budget to Indonesian Rupiah (IDR) */}
                   <p className="flex items-center text-sm text-muted-foreground">
                     <Wallet className="mr-2 h-4 w-4" />
                     Budget: {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(Number(plan.budget))}

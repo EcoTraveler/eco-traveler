@@ -149,7 +149,6 @@ export default function TravelForm() {
               <CardHeader>
                 <CardTitle>Plan Your Trip</CardTitle>
                 <CardDescription>Fill in the details to get personalized travel recommendations.</CardDescription>
-                <div className="flex justify-center font-bold">My Token : {token}</div>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleRecommendation} className="space-y-4">

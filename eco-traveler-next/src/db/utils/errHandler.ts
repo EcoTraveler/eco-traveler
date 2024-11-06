@@ -1,4 +1,3 @@
-import { ChevronsLeftRightEllipsisIcon } from "lucide-react";
 import { z } from "zod";
 
 export const errHandler = (err: any): Response => {
@@ -34,10 +33,7 @@ export const errHandler = (err: any): Response => {
     message = err.message;
     status = err.status;
   }
-  if (
-    err.message ==
-    "The total days between startDate and endDate cannot exceed the duration."
-  ) {
+  if (err.message == "The total days between startDate and endDate cannot exceed the duration.") {
     message = err.message;
     status = err.status;
   }

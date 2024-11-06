@@ -52,7 +52,7 @@ export default function Navbar() {
               </DropdownMenu>
               <NavLink href="/ai-recommendation">AI Recommendation</NavLink>
               <NavLink href="/about">About</NavLink>
-              <NavLink href="/paypal">Pricing</NavLink>
+              <NavLink href="/pricing">Pricing</NavLink>
             </div>
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-2">
@@ -114,7 +114,7 @@ export default function Navbar() {
             <Link href="/about" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
               About
             </Link>
-            <Link href="/paypal" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+            <Link href="/pricing" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
               Pricing
             </Link>
           </div>

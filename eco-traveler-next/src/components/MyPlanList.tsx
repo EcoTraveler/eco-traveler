@@ -50,7 +50,7 @@ export default function MyPlanList() {
   }
 
   async function handleUpdateStatus(id: string | undefined, action: string) {
-    const response = await fetch(`http://localhost:3000/api/planning-users/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/planning-users/${id}`, {
       method: "PATCH",
       body: JSON.stringify(action),
     });

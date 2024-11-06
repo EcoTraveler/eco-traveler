@@ -1,10 +1,8 @@
 import { z } from "zod";
 import { database } from "../config";
 import { hashText } from "../utils/bcrypt";
-import { ObjectId } from "mongodb";
 
 const userSchema = z.object({
-  // _id: z.string().optional(),
   name: z.string(),
   username: z.string({ required_error: "Username is required" }),
   email: z.string().email(),

@@ -64,7 +64,14 @@ export default function PlannerList() {
     const isJoined = planningUsers?.find(
       (el) => el.planningId.toString() === planId
     );
-    return isJoined ? isJoined.status : "Not Joined";
+    if (!isJoined) return "Join";
+    if (isJoined) {
+      if (isJoined.status === "Actived") {
+        return "Accepted";
+      } else if (isJoined.status === "pending") {
+        return "Pending";
+      }
+    }
   };
 
   return (

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { myResponse } from "../../plan/route";
 import {
+  getPlanningUser,
   updateStatusAccept,
   updateStatusReject,
 } from "@/db/models/PlanningUser";
@@ -61,6 +62,28 @@ export const DELETE = async (
     return NextResponse.json<myResponse<unknown>>({
       statusCode: 400,
       message: "delete plan failed",
+    });
+  }
+};
+
+export const GET = async (
+  req: Request,
+  { params }: { params: { planUserId: string } }
+) => {
+  try {
+    const result = await getPlanningUser(params.planUserId);
+    return NextResponse.json<myResponse<unknown>>({
+      statusCode: 200,
+      message: "success get planningUser",
+      data: result,
+    });
+  } catch (error) {
+    const err = error as Error;
+
+    console.log(err);
+    return NextResponse.json<myResponse<unknown>>({
+      statusCode: 404,
+      message: "fetch planningUser failed",
     });
   }
 };

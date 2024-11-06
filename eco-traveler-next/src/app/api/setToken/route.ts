@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     const setToken = await database
       .collection("SetToken")
       .insertOne({ clerkId, tokens, freeToken });
-    return Response.json({ message: "set token success" });
+    return Response.json({ message: "set token success", data: setToken });
   } catch (error) {
     return errHandler(error);
   }
@@ -53,7 +53,10 @@ export async function PATCH(request: Request) {
       .collection("SetToken")
       .updateOne({ clerkId }, { $set: { tokens: tokenUser } });
     return new Response(
-      JSON.stringify({ message: "Tokens updated successfully" }),
+      JSON.stringify({
+        message: "Tokens updated successfully",
+        data: setToken,
+      }),
       { status: 200 }
     );
   } catch (error) {
@@ -71,7 +74,10 @@ export async function PUT(request: Request) {
       .collection("SetToken")
       .updateOne({ clerkId }, { $set: { tokens: tokenUser } });
     return new Response(
-      JSON.stringify({ message: "Tokens updated successfully" }),
+      JSON.stringify({
+        message: "Tokens updated successfully",
+        data: setToken,
+      }),
       { status: 200 }
     );
   } catch (error) {

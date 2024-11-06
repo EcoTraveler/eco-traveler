@@ -88,6 +88,7 @@ export async function POST(request: Request) {
       ...parsedData.data,
       clerkId: userId,
     };
+    console.log(planData);
 
     const plan = await createPlan(planData);
 

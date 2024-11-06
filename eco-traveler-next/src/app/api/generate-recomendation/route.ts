@@ -27,9 +27,16 @@ export async function POST(req: Request) {
     });
 
     // Parse the AI response as JSON
-    const recommendations = JSON.parse(
-      completion.choices[0].message.content || "{}"
-    );
+    const content = completion.choices?.[0]?.message?.content?.trim();
+    if (!content) return;
+    let recommendations;
+
+    try {
+      recommendations = JSON.parse(content);
+    } catch (err) {
+      console.log(err);
+      throw { message: "Please generate again", status: 500 };
+    }
 
     return NextResponse.json(recommendations);
   } catch (error) {

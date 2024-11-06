@@ -22,6 +22,29 @@ export const errHandler = (err: any): Response => {
     message = err.message;
     status = err.status;
   }
+  if (err.message == "run out of token") {
+    message = err.message;
+    status = err.status;
+  }
+  if (err.message == "Input all field to get recomendation") {
+    message = err.message;
+    status = err.status;
+  }
+  if (err.message == "The endDate cannot be earlier than startDate") {
+    message = err.message;
+    status = err.status;
+  }
+  if (
+    err.message ==
+    "The total days between startDate and endDate cannot exceed the duration."
+  ) {
+    message = err.message;
+    status = err.status;
+  }
+  if (err.message == "comment not found") {
+    message = err.message;
+    status = err.status;
+  }
   return Response.json(
     {
       message: message,

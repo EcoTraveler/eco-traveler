@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import { Message } from "@/type";
 import { ScrollArea } from "./ui/scrollarea";
-import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 
 interface MessageListProps {
   messages: Message[];
@@ -15,16 +14,16 @@ export function MessageList({ messages, currentUser }: MessageListProps) {
 
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
 
   return (
-    <ScrollArea className="h-[600px] p-4" ref={scrollRef}>
+    <ScrollArea className="h-[600px] p-4">
       <div className="space-y-4">
-        {messages.map((message) => (
+        {messages.map((message, index) => (
           <div
-            key={message.id}
+            key={index}
             className={`flex ${
               message.username === currentUser ? "justify-end" : "justify-start"
             }`}
@@ -40,16 +39,12 @@ export function MessageList({ messages, currentUser }: MessageListProps) {
                 <span className="text-sm font-semibold">
                   {message.username}
                 </span>
-                <span className="text-xs text-muted-foreground">
-                  {formatDistanceToNow(new Date(message.timestamp), {
-                    addSuffix: true,
-                  })}
-                </span>
               </div>
               <p className="mt-1">{message.content}</p>
             </div>
           </div>
         ))}
+        <div ref={scrollRef} />
       </div>
     </ScrollArea>
   );

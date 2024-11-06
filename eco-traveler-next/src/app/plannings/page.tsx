@@ -69,7 +69,8 @@ export default function PlannerList() {
     });
 
     if (response.ok) {
-      fetchPlanningUsers();
+      const newPlanningUser = await response.json();
+      setPlanningUsers(prevUsers => [...prevUsers, newPlanningUser]);
     }
   };
 
@@ -98,7 +99,14 @@ export default function PlannerList() {
                 </CardTitle>
                 <CardDescription className="flex items-center space-x-2">
                   <Wallet className="h-4 w-4 text-green-500" />
-                  <span>{new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(Number(plan.budget))}</span>
+                  <span>
+                    {new Intl.NumberFormat("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0,
+                    }).format(Number(plan.budget))}
+                  </span>
                 </CardDescription>
               </CardHeader>
               <CardContent>

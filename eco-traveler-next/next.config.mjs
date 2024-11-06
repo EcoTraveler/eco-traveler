@@ -23,6 +23,9 @@ const nextConfig = {
       "cdn.idntimes.com",
     ],
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;

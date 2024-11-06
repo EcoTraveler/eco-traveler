@@ -2,7 +2,7 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "./db/utils/jwt";
 
-const isProtectedRoute = createRouteMatcher(["/plannings", "/ai-recommendation", "/paypal"]);
+const isProtectedRoute = createRouteMatcher(["/plannings", "/ai-recommendation", "/paypal", "/my-plan"]);
 const isApiRoute = createRouteMatcher(["/api/posts/[posts]"]);
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {

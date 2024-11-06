@@ -3,9 +3,10 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserButton, useUser } from "@clerk/nextjs";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const NavLink = ({
   href,
@@ -48,10 +49,30 @@ export default function Navbar() {
             </Link>
             <div className="hidden sm:ml-8 sm:flex sm:space-x-8">
               <NavLink href="/destinations">Destinations</NavLink>
-              <NavLink href="/plannings">List Plannings</NavLink>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="text-gray-700 hover:text-green-600 transition-colors">
+                    Plan <ChevronDown className="inline-block ml-1 h-4 w-4" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem>
+                    <Link href="/plannings" className="w-full">
+                      List Plannings
+                    </Link>
+                  </DropdownMenuItem>
+                  {isSignedIn && (
+                    <DropdownMenuItem>
+                      <Link href="/my-plan" className="w-full">
+                        My Plan
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
               <NavLink href="/ai-recommendation">AI Recommendation</NavLink>
               <NavLink href="/about">About</NavLink>
-              <NavLink href="/paypal">Pricing</NavLink>
+              <NavLink href="/pricing">Pricing</NavLink>
               <NavLink href="/chat">My Room Chat</NavLink>
             </div>
           </div>
@@ -114,16 +135,22 @@ export default function Navbar() {
             >
               Destinations
             </Link>
-            <Link
-              href="/plannings"
-              className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-            >
-              List Plannings
-            </Link>
-            <Link
-              href="/ai-recommendation"
-              className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-            >
+            <div className="relative">
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="w-full text-left block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                Plan <ChevronDown className="inline-block ml-1 h-4 w-4" />
+              </button>
+              <div className="pl-6 space-y-1">
+                <Link href="/plannings" className="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                  List Plannings
+                </Link>
+                {isSignedIn && (
+                  <Link href="/my-plan" className="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                    My Plan
+                  </Link>
+                )}
+              </div>
+            </div>
+            <Link href="/ai-recommendation" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
               AI Recommendation
             </Link>
             <Link
@@ -132,10 +159,7 @@ export default function Navbar() {
             >
               About
             </Link>
-            <Link
-              href="/paypal"
-              className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-            >
+            <Link href="/pricing" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
               Pricing
             </Link>
           </div>

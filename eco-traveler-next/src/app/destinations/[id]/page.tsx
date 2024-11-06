@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useState, useEffect, useCallback } from "react";
+import { useParams } from "next/navigation";
 import Image from "next/image";
-import { MapPin } from "lucide-react";
+import { MapPin, Calendar, List, Camera, Sun, Loader2 } from "lucide-react";
+import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import Link from "next/link";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Destination {
   id: string;
@@ -421,100 +421,180 @@ const destinationsData: Destination[] = [
       bestTimeToVisit: "April hingga September (musim kemarau)",
     },
   },
-  // Add more sdestinations here...
 ];
 
-export default function DestinationsPage() {
-  const [destinations, setDestinations] = useState<Destination[]>([]);
-  const [loading, setLoading] = useState(true);
+const libraries: ("places" | "drawing" | "geometry" | "visualization")[] = ["places"];
+
+export default function DetailedDestinationPage() {
+  const { id } = useParams();
+  const [destination, setDestination] = useState<Destination | null>(null);
+  const [coordinates, setCoordinates] = useState<google.maps.LatLngLiteral | null>(null);
+
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
+    libraries: libraries,
+  });
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setDestinations(destinationsData);
-      setLoading(false);
-    }, 1000);
+    const foundDestination = destinationsData.find(dest => dest.id === id);
+    setDestination(foundDestination || null);
+  }, [id]);
 
-    return () => clearTimeout(timer);
-  }, []);
+  useEffect(() => {
+    if (destination && isLoaded) {
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode(
+        {
+          address: `${destination.destination.name}, ${destination.provinsi}, Indonesia`,
+        },
+        (results, status) => {
+          if (status === "OK" && results && results[0]) {
+            const { lat, lng } = results[0].geometry.location;
+            setCoordinates({ lat: lat(), lng: lng() });
+          } else {
+            console.error("Geocode was not successful for the following reason: " + status);
+          }
+        }
+      );
+    }
+  }, [destination, isLoaded]);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
+  const mapRef = useCallback(
+    (node: google.maps.Map | null) => {
+      if (node !== null && coordinates) {
+        node.panTo(coordinates);
+      }
     },
-  };
+    [coordinates]
+  );
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-    },
-  };
+  if (loadError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-red-50">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-red-600 mb-2">Error Loading Maps</h2>
+          <p className="text-gray-600">We're having trouble loading the map. Please try again later.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isLoaded || !destination) {
+    return (
+      <>
+        <Navbar />
+        <div className="container mx-auto px-4 py-8">
+          <Card className="mb-8">
+            <CardHeader>
+              <Skeleton className="h-12 w-3/4 mb-2" />
+              <Skeleton className="h-6 w-1/2" />
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                  <Skeleton className="h-[400px] w-full rounded-lg" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-5/6" />
+                  <Skeleton className="h-4 w-4/6" />
+                </div>
+                <div className="space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <Skeleton className="h-8 w-1/2" />
+                    </CardHeader>
+                    <CardContent>
+                      <Skeleton className="h-4 w-full mb-2" />
+                      <Skeleton className="h-4 w-5/6 mb-2" />
+                      <Skeleton className="h-4 w-4/6" />
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader>
+                      <Skeleton className="h-8 w-1/3" />
+                    </CardHeader>
+                    <CardContent>
+                      <Skeleton className="h-[300px] w-full rounded-lg" />
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
       <Navbar />
-      <div className="container mx-auto px-4 py-8">
-        <motion.h1 className="text-4xl font-bold text-center mb-8" initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5 }}>
-          Discover Destination
-        </motion.h1>
-
-        {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, index) => (
-              <Card key={index} className="overflow-hidden rounded-xl border-none">
-                <CardContent className="p-0">
-                  <div className="relative">
-                    <Skeleton className="h-64 w-full" />
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
-                      <Skeleton className="h-6 w-3/4 bg-white/50" />
-                      <div className="mt-1 flex items-center space-x-2">
-                        <Skeleton className="h-4 w-4 rounded-full bg-white/50" />
-                        <Skeleton className="h-4 w-1/2 bg-white/50" />
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+      <main className="container mx-auto px-4 py-8">
+        <Card className="mb-8 overflow-hidden">
+          <div className="relative h-[300px] md:h-[400px]">
+            <Image src={destination.destination.imgUrl} alt={destination.destination.name} fill className="object-cover" sizes="100vw" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+            <div className="absolute bottom-0 left-0 p-6 text-white">
+              <h1 className="text-4xl font-bold mb-2">{destination.destination.name}</h1>
+              <div className="flex items-center">
+                <MapPin className="mr-2 h-5 w-5" />
+                <span>{destination.provinsi}</span>
+              </div>
+            </div>
           </div>
-        ) : (
-          <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" variants={containerVariants} initial="hidden" animate="visible">
-            {destinations.map(item => (
-              <motion.div key={item.id} variants={itemVariants}>
-                <Link href={`/destinations/${item.id}`}>
-                  <Card className="group overflow-hidden rounded-xl border-none cursor-pointer">
-                    <CardContent className="p-0">
-                      <div className="relative">
-                        <div className="relative h-64">
-                          <Image
-                            src={item.destination.imgUrl}
-                            alt={item.destination.name}
-                            className="object-cover transition-transform duration-300 group-hover:scale-110"
-                            fill
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                          />
-                        </div>
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4 text-white">
-                          <h3 className="text-xl font-semibold">{item.destination.name}</h3>
-                          <div className="mt-1 flex items-center space-x-2">
-                            <MapPin className="h-4 w-4" />
-                            <span className="text-sm">{item.provinsi}</span>
-                          </div>
-                        </div>
+          <CardContent className="pt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-6">
+                <p className="text-lg">{destination.destination.longDescription}</p>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Camera className="mr-2 h-5 w-5" /> Main Attractions
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="list-disc list-inside space-y-2">
+                      {destination.destination.attractions.map((attraction, index) => (
+                        <li key={index}>{attraction}</li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Sun className="mr-2 h-5 w-5" /> Best Time to Visit
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p>{destination.destination.bestTimeToVisit}</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <MapPin className="mr-2 h-5 w-5" /> Location
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {coordinates ? (
+                      <GoogleMap mapContainerClassName="w-full h-[400px] rounded-lg" center={coordinates} zoom={14} onLoad={mapRef}>
+                        <Marker position={coordinates} />
+                      </GoogleMap>
+                    ) : (
+                      <div className="w-full h-[400px] rounded-lg bg-gray-100 flex items-center justify-center">
+                        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
                       </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </main>
       <Footer />
     </>
   );

@@ -102,19 +102,19 @@ export const createPlan = async (plan: inputPlan) => {
     ...plan,
     userId: plan.userId ? new ObjectId(plan.userId) : undefined,
     clerkId: plan.clerkId ?? "",
-    destination: plan.destination?.map((dest) => ({
+    destination: plan.destination?.map(dest => ({
       _id: new ObjectId(dest._id),
       name: dest.name,
       description: dest.description,
     })),
-    hotel: plan.hotel?.map((h) => ({
+    hotel: plan.hotel?.map(h => ({
       _id: new ObjectId(h._id),
       name: h.name,
       description: h.description,
       rating: h.rating,
       price: h.price,
     })),
-    transportation: plan.transportation?.map((trans) => ({
+    transportation: plan.transportation?.map(trans => ({
       _id: new ObjectId(trans._id),
       type: trans.type,
       description: trans.description,

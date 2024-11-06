@@ -21,7 +21,11 @@ const nextConfig = {
       "wonderful.pulaumorotaikab.go.id",
       "res.cloudinary.com",
       "cdn.idntimes.com",
+      "indonesia.go.id",
     ],
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 };
 

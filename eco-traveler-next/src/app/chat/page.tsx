@@ -69,7 +69,7 @@ export default function ChatRoom() {
     socket.on("previous-messages", (previousMessages: Message[]) => {
       setMessages(previousMessages);
     });
-    
+
     // socket.on("new-message", (message: Message) => {
     //   setMessages((prev) => [...prev, message.message]);
     // });

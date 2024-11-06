@@ -12,7 +12,12 @@ interface Plan {
   name: string;
   budget: string;
   destination: Array<{ name: string; description: string }>;
-  hotel: Array<{ name: string; description: string; rating: number; price: string }>;
+  hotel: Array<{
+    name: string;
+    description: string;
+    rating: number;
+    price: string;
+  }>;
   transportation: Array<{ type: string; description: string; price: string }>;
   duration: number;
   startDate: string;
@@ -57,7 +62,7 @@ export default function PlannerList() {
     const response = await fetch("/api/plans", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ planId, clerkId: user.id }),
+      body: JSON.stringify({ planId, clerkId: user.id, name: user.fullName }),
     });
 
     if (response.ok) {
@@ -66,7 +71,7 @@ export default function PlannerList() {
   };
 
   const getPlanStatus = (planId: string) => {
-    const planningUser = planningUsers.find(pu => pu.planningId === planId);
+    const planningUser = planningUsers.find((pu) => pu.planningId === planId);
     return planningUser ? planningUser.status : "Join";
   };
 

@@ -41,7 +41,7 @@ export const errHandler = (err: any): Response => {
     message = err.message;
     status = err.status;
   }
-  if (err.message == "comment not found") {
+  if (err.message == "plan not found") {
     message = err.message;
     status = err.status;
   }

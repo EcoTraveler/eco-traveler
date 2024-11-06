@@ -66,7 +66,7 @@ export async function PUT(request: Request) {
     const findUser = await database.collection("SetToken").findOne({ clerkId });
     if (!findUser) throw { message: "User Not Found", status: 401 };
     const tokenUser = findUser.tokens - tokens;
-    if (tokenUser <= 0) throw { message: "run out of token", status: 401 };
+    if (tokenUser < 0) throw { message: "run out of token", status: 401 };
     const setToken = await database
       .collection("SetToken")
       .updateOne({ clerkId }, { $set: { tokens: tokenUser } });

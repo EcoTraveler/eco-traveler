@@ -77,8 +77,8 @@ export default function AboutPage() {
           Join Our Mission
         </motion.h2>
         <motion.p className="text-lg mb-6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.5 }}>
-          Whether you're a seasoned eco-traveler or just beginning your journey towards more sustainable travel, EcoTraveler is here to guide you. Together, we can explore the world responsibly and make a positive impact on the places we
-          visit.
+          Whether you&apos;re a seasoned eco-traveler or just beginning your journey towards more sustainable travel, EcoTraveler is here to guide you. Together, we can explore the world responsibly and make a positive impact on the places
+          we visit.
         </motion.p>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.6 }}>
           <Link href="/sign-in" className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">

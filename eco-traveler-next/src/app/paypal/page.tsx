@@ -11,14 +11,27 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import PPbuttons from "@/components/Paypal";
 
+interface Plan {
+  name: string;
+  price: string;
+  tokens: number;
+  features: string[];
+  description: string;
+}
+
+interface PayPalDetails {
+  id: string;
+  status: string;
+  // Add other relevant fields from PayPal response
+}
+
 const PricingPage = () => {
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [statusToken, setStatusToken] = useState(true);
   const router = useRouter();
   const { user } = useUser();
   const userId = user?.id;
 
-  const plans = [
+  const plans: Plan[] = [
     {
       name: "Free Trial",
       price: "0",
@@ -44,20 +57,27 @@ const PricingPage = () => {
 
   useEffect(() => {
     const getTokenStatus = async () => {
+      if (!userId) return;
       try {
         const status = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/setToken?userId=${userId}`, { method: "GET" });
-        const data = await status?.json();
+        const data = await status.json();
         if (status.ok) {
-          setStatusToken(data?.freeToken);
+          setStatusToken(data.freeToken);
         }
       } catch (error) {
         console.error("Failed to get token status:", error);
+        toast({
+          title: "Error",
+          description: "Failed to get token status. Please try again.",
+          variant: "destructive",
+        });
       }
     };
-    if (userId) getTokenStatus();
+    getTokenStatus();
   }, [userId]);
 
   const handleFreeToken = async () => {
+    if (!userId) return;
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/setToken`, {
         method: "POST",
@@ -75,6 +95,7 @@ const PricingPage = () => {
         throw new Error("Failed to get free tokens");
       }
     } catch (error) {
+      console.error("Failed to get free tokens:", error);
       toast({
         title: "Error",
         description: "Failed to get free tokens. Please try again.",
@@ -83,7 +104,8 @@ const PricingPage = () => {
     }
   };
 
-  const handleSuccess = async (details: any, plan: any) => {
+  const handleSuccess = async (details: PayPalDetails, plan: Plan) => {
+    if (!userId) return;
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/setToken`, {
         method: "PATCH",
@@ -101,7 +123,7 @@ const PricingPage = () => {
         throw new Error("Failed to set tokens after purchase");
       }
     } catch (error) {
-      console.error(error);
+      console.error("Failed to process purchase:", error);
       toast({
         title: "Error",
         description: "Failed to process your purchase. Please try again.",
@@ -126,7 +148,7 @@ const PricingPage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {plans.map(plan => (
-            <Card key={plan.name} className={`${selectedPlan === plan.name ? "border-green-500 shadow-lg" : "border-gray-200"} transition-all duration-300`}>
+            <Card key={plan.name} className="border-gray-200 transition-all duration-300">
               <CardHeader>
                 <CardTitle className="text-2xl font-bold text-green-700">{plan.name}</CardTitle>
                 <CardDescription>{plan.description}</CardDescription>
@@ -151,7 +173,7 @@ const PricingPage = () => {
                     Get {plan.tokens} Free Tokens
                   </Button>
                 ) : (
-                  plan.name !== "Free Trial" && <PPbuttons amount={plan.price} onSuccess={(details: any) => handleSuccess(details, plan)} />
+                  plan.name !== "Free Trial" && <PPbuttons amount={plan.price} onSuccess={(details: PayPalDetails) => handleSuccess(details, plan)} />
                 )}
               </CardFooter>
             </Card>

@@ -3,15 +3,8 @@
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Calendar, MapPin, Users, DollarSign, Clock, Plane, Hotel, Bus } from "lucide-react";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Calendar, MapPin, Users, Clock, Plane, Hotel, Bus, Wallet } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { Input } from "@/components/ui/input";
 import Footer from "@/components/Footer";
@@ -46,7 +39,6 @@ export default function PlannerList() {
   const [plans, setPlans] = useState<Plan[]>([]);
   const [planningUsers, setPlanningUsers] = useState<PlanningUser[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterBudget, setFilterBudget] = useState("all");
 
   useEffect(() => {
     fetchPlans();
@@ -82,11 +74,11 @@ export default function PlannerList() {
   };
 
   const getPlanStatus = (planId: string) => {
-    const planningUser = planningUsers.find((pu) => pu.planningId === planId);
+    const planningUser = planningUsers.find(pu => pu.planningId === planId);
     return planningUser ? planningUser.status : "Join";
   };
 
-  const filteredPlans = plans.filter(plan => plan.name.toLowerCase().includes(searchTerm.toLowerCase()) && (filterBudget === "all" || plan.budget === filterBudget));
+  const filteredPlans = plans.filter(plan => plan.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
     <>
@@ -100,13 +92,13 @@ export default function PlannerList() {
           {filteredPlans.map(plan => (
             <Card key={plan._id} className="hover:shadow-lg transition-shadow duration-300">
               <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
+                <CardTitle className="flex items-center space-x-2 capitalize">
                   <MapPin className="h-5 w-5 text-blue-500" />
                   <span>{plan.name}</span>
                 </CardTitle>
                 <CardDescription className="flex items-center space-x-2">
-                  <DollarSign className="h-4 w-4 text-green-500" />
-                  <span>{plan.budget}</span>
+                  <Wallet className="h-4 w-4 text-green-500" />
+                  <span>{new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(Number(plan.budget))}</span>
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -146,6 +138,6 @@ export default function PlannerList() {
         </div>
       </main>
       <Footer />
-      </>
+    </>
   );
 }

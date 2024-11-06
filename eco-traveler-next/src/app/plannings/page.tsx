@@ -1,16 +1,28 @@
-'use client'
+"use client";
 
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 interface Plan {
   _id: string;
   name: string;
   budget: string;
   destination: Array<{ name: string; description: string }>;
-  hotel: Array<{ name: string; description: string; rating: number; price: string }>;
+  hotel: Array<{
+    name: string;
+    description: string;
+    rating: number;
+    price: string;
+  }>;
   transportation: Array<{ type: string; description: string; price: string }>;
   duration: number;
   startDate: string;
@@ -38,7 +50,7 @@ export default function PlannerList() {
   }, [user]);
 
   const fetchPlans = async () => {
-    const response = await fetch('/api/plans');
+    const response = await fetch("/api/plans");
     const data = await response.json();
     setPlans(data);
   };
@@ -52,10 +64,10 @@ export default function PlannerList() {
   const joinPlan = async (planId: string) => {
     if (!user) return;
 
-    const response = await fetch('/api/plans', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ planId, clerkId: user.id }),
+    const response = await fetch("/api/plans", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ planId, clerkId: user.id, name: user.fullName }),
     });
 
     if (response.ok) {
@@ -64,8 +76,8 @@ export default function PlannerList() {
   };
 
   const getPlanStatus = (planId: string) => {
-    const planningUser = planningUsers.find(pu => pu.planningId === planId);
-    return planningUser ? planningUser.status : 'Join';
+    const planningUser = planningUsers.find((pu) => pu.planningId === planId);
+    return planningUser ? planningUser.status : "Join";
   };
 
   return (
@@ -84,11 +96,15 @@ export default function PlannerList() {
               <p>End Date: {new Date(plan.endDate).toLocaleDateString()}</p>
             </CardContent>
             <CardFooter>
-              <Button 
-                onClick={() => joinPlan(plan._id)} 
-                disabled={plan.clerkId === user?.id || getPlanStatus(plan._id) === 'pending'}
-              >
-                {plan.clerkId === user?.id ? 'Your Plan' : getPlanStatus(plan._id)}
+              <Button
+                onClick={() => joinPlan(plan._id)}
+                disabled={
+                  plan.clerkId === user?.id ||
+                  getPlanStatus(plan._id) === "pending"
+                }>
+                {plan.clerkId === user?.id
+                  ? "Your Plan"
+                  : getPlanStatus(plan._id)}
               </Button>
             </CardFooter>
           </Card>

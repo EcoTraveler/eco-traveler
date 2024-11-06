@@ -2,6 +2,7 @@ import { createPlan, getPlans, plan } from "@/db/models/Plan";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@clerk/nextjs/server";
+import { errHandler } from "@/db/utils/errHandler";
 
 export type myResponse<T> = {
   statusCode: number;
@@ -13,7 +14,11 @@ export type myResponse<T> = {
 const planInputSchema = z.object({
   name: z.string().min(1, "Name required"),
   budget: z.string().min(1, "Budget required"),
-  destination: z.array(z.object({ _id: z.string(), name: z.string(), description: z.string() })).min(1, "At least one destination option is required"),
+  destination: z
+    .array(
+      z.object({ _id: z.string(), name: z.string(), description: z.string() })
+    )
+    .min(1, "At least one destination option is required"),
   hotel: z.array(
     z.object({
       _id: z.string(),
@@ -56,7 +61,10 @@ export async function POST(request: Request) {
     const { endDate, startDate, duration } = data;
     if (endDate && startDate) {
       if (new Date(startDate) > new Date(endDate)) {
-        throw new Error("The endDate cannot be earlier than startDate");
+        throw {
+          message: "The endDate cannot be earlier than startDate",
+          status: 401,
+        };
       }
     }
 
@@ -66,7 +74,11 @@ export async function POST(request: Request) {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); //convert total time to day
 
     if (diffDays > duration) {
-      throw new Error("The total days between startDate and endDate cannot exceed the duration.");
+      throw {
+        message:
+          "The total days between startDate and endDate cannot exceed the duration.",
+        status: 401,
+      };
     }
 
     const parsedData = planInputSchema.safeParse(data);
@@ -90,31 +102,7 @@ export async function POST(request: Request) {
       }
     );
   } catch (error) {
-    const err = error as Error;
-    console.log(err);
-
-    if (err instanceof z.ZodError) {
-      const errPath = err.issues[0].path[0];
-      const errMessage = err.issues[0].message;
-      return NextResponse.json<myResponse<never>>(
-        {
-          statusCode: 400,
-          error: `${errPath} - ${errMessage}`,
-        },
-        {
-          status: 400,
-        }
-      );
-    }
-    return NextResponse.json<myResponse<never>>(
-      {
-        statusCode: 500,
-        error: err.message,
-      },
-      {
-        status: 500,
-      }
-    );
+    return errHandler(error);
   }
 }
 

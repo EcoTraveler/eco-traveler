@@ -1,3 +1,4 @@
+import { errHandler } from "@/db/utils/errHandler";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
@@ -11,7 +12,7 @@ export async function POST(req: Request) {
     const data = await req.json();
     const { destination, duration, budget } = data;
     if (!destination || !budget) {
-      throw new Error("Input all field to get recomendation");
+      throw { message: "Input all field to get recomendation", status: 401 };
     }
     const completion = await openai.chat.completions.create({
       model: "gpt-4",
@@ -32,11 +33,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json(recommendations);
   } catch (error) {
-    const err = error as Error;
-    console.error("Error:", error);
-    return NextResponse.json({
-      status: 500,
-      message: err.message,
-    });
+    return errHandler(error);
   }
 }

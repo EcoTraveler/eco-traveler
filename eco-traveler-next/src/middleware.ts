@@ -2,7 +2,7 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "./db/utils/jwt";
 
-const isProtectedRoute = createRouteMatcher(["/plannings", "/ai-recommendation"]);
+const isProtectedRoute = createRouteMatcher(["/plannings", "/ai-recommendation", "/paypal"]);
 const isApiRoute = createRouteMatcher(["/api/posts/[posts]"]);
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
@@ -36,22 +36,28 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
         email: string;
       }>(token);
 
-      const response = NextResponse.next();
+      // Create a new headers object from the request headers
+      const requestHeaders = new Headers(req.headers);
 
-      // Set custom headers
+      // Create a NextResponse object to proceed with the request
+      const response = NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
+
+      // Set new response headers
       response.headers.set("x-user-email", decode.email);
       response.headers.set("x-user-id", decode.id);
       response.headers.set("x-user-username", decode.username);
       response.headers.set("x-user-name", decode.name);
-
       return response;
     } catch (error) {
-      console.error("Error verifying token:", error);
       return NextResponse.json({ message: "Invalid token" }, { status: 401 });
     }
   }
 
-  // For non-API routes that are not protected, just continue
+  // If not protected or API route, just continue
   return NextResponse.next();
 });
 

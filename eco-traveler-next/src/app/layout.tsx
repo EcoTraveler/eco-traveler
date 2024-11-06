@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "EcoTraveler",
-  description: "Plan and book our perfect trip with expert advice, travel tips, destination information and inspiration from us",
+  description:
+    "Plan and book our perfect trip with expert advice, travel tips, destination information and inspiration from us",
   icons: {
     icon: "/assets/EcoTraveler.ico",
   },
@@ -16,6 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+
     <html lang="en">
       <head>
         <style>{`
@@ -55,17 +58,21 @@ export default function RootLayout({
             right: 0;
             bottom: 0;
             z-index: -1;
-            }
-            `}</style>
-      </head>
-      <body>
-        <div className="animated-bg"></div>
-        <div className="blur-overlay"></div>
-        <div className="white-overlay"></div>
-        <div className="relative z-10">
-          <ClerkProvider>{children}</ClerkProvider>
-        </div>
-      </body>
-    </html>
+          }
+        `}</style>
+        
+        </head>
+        <body>
+          <div className="animated-bg"></div>
+          <div className="blur-overlay"></div>
+          <div className="white-overlay"></div>
+      <Toaster />
+    <div className="relative z-10">
+    <ClerkProvider>
+      {children}
+      </ClerkProvider>
+    </div>
+        </body>
+      </html>
   );
 }

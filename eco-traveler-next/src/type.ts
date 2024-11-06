@@ -29,11 +29,14 @@ export interface PlanningUser {
 }
 
 export interface Message {
-  id: string;
+  roomId: string;
+  clerkId: string;
   username: string;
   content: string;
-  timestamp: string;
 }
+export type MessageType = {
+  message: [Message];
+};
 
 export interface User {
   id: string;

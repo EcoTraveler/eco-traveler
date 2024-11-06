@@ -8,6 +8,8 @@ import { Calendar, MapPin, Users, Clock, Plane, Hotel, Bus, Wallet, Loader2 } fr
 import Navbar from "@/components/Navbar";
 import { Input } from "@/components/ui/input";
 import Footer from "@/components/Footer";
+import { useToast } from "@/hooks/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 interface Plan {
   _id: string;
@@ -40,6 +42,7 @@ export default function PlannerList() {
   const [planningUsers, setPlanningUsers] = useState<PlanningUser[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchPlans();
@@ -85,6 +88,12 @@ export default function PlannerList() {
       if (response.ok) {
         const newPlanningUser = await response.json();
         setPlanningUsers(prevUsers => [...prevUsers, newPlanningUser]);
+        toast({
+          title: "Success!",
+          description: "You have successfully joined the plan, waiting for the owner to approve.",
+        });
+      } else {
+        throw new Error("Failed to join plan");
       }
     } catch (error) {
       console.error("Failed to join plan:", error);
@@ -115,6 +124,7 @@ export default function PlannerList() {
     <>
       <Navbar />
       <main className="flex-grow container mx-auto p-4 relative min-h-screen">
+        <Toaster />
         {isLoading && (
           <div className="absolute inset-0 bg-transparent bg-opacity-75 flex items-center justify-center z-50">
             <Loader2 className="h-16 w-16 animate-spin text-green-500" />

@@ -136,7 +136,7 @@ export default function TravelForm() {
           <div className="text-center">
             <p className="text-2xl font-semibold mb-6">You don&apos;t have any tokens.</p>
             <Button asChild className="px-6 py-3 text-lg bg-green-500 hover:bg-green-600">
-              <a href="/paypal">Get 5 Free Tokens</a>
+              <a href="/pricing">Get 5 Free Tokens</a>
             </Button>
           </div>
         </div>

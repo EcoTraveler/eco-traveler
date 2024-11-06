@@ -107,6 +107,11 @@ export default function Home() {
               </motion.div>
             ))}
           </motion.div>
+          <motion.div className="mt-8 text-center" variants={itemVariants}>
+            <Link href="/destinations">
+              <Button className="inline-block px-6 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 transition duration-300">Explore Destinations</Button>
+            </Link>
+          </motion.div>
         </motion.section>
 
         <div>

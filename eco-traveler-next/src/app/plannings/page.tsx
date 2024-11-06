@@ -3,18 +3,30 @@
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Calendar, MapPin, Users, DollarSign, Clock, Plane, Hotel, Bus } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import { Input } from "@/components/ui/input";
+import Footer from "@/components/Footer";
 
 interface Plan {
   _id: string;
   name: string;
   budget: string;
   destination: Array<{ name: string; description: string }>;
-  hotel: Array<{ name: string; description: string; rating: number; price: string }>;
+  hotel: Array<{
+    name: string;
+    description: string;
+    rating: number;
+    price: string;
+  }>;
   transportation: Array<{ type: string; description: string; price: string }>;
   duration: number;
   startDate: string;
@@ -61,7 +73,7 @@ export default function PlannerList() {
     const response = await fetch("/api/plans", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ planId, clerkId: user.id }),
+      body: JSON.stringify({ planId, clerkId: user.id, name: user.fullName }),
     });
 
     if (response.ok) {
@@ -70,14 +82,14 @@ export default function PlannerList() {
   };
 
   const getPlanStatus = (planId: string) => {
-    const planningUser = planningUsers.find(pu => pu.planningId === planId);
+    const planningUser = planningUsers.find((pu) => pu.planningId === planId);
     return planningUser ? planningUser.status : "Join";
   };
 
   const filteredPlans = plans.filter(plan => plan.name.toLowerCase().includes(searchTerm.toLowerCase()) && (filterBudget === "all" || plan.budget === filterBudget));
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
+    <>
       <Navbar />
       <main className="flex-grow container mx-auto p-4">
         <h1 className="text-3xl font-bold mb-6 text-center">Discover Amazing Travel Plans</h1>
@@ -134,6 +146,6 @@ export default function PlannerList() {
         </div>
       </main>
       <Footer />
-    </div>
+      </>
   );
 }

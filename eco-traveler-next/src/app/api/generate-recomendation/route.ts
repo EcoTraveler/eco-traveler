@@ -2,6 +2,8 @@ import { errHandler } from "@/db/utils/errHandler";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
+export const runtime = "edge";
+
 // Inisialisasi OpenAI client
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,

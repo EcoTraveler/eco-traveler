@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import PricingPlans from "@/components/Pricing";
 export default function Home() {
   const destinations = [
     {
@@ -108,35 +109,6 @@ export default function Home() {
           </motion.div>
         </motion.section>
 
-        {/* Get inspired by our traveler */}
-        <motion.section className="container mx-auto px-4 py-12" initial="hidden" animate="visible" variants={containerVariants}>
-          <motion.h2 className="mb-8 text-2xl font-bold" variants={itemVariants}>
-            Get inspired by our traveler
-          </motion.h2>
-          <motion.div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4" variants={containerVariants}>
-            {destinations.map((destination, index) => (
-              <motion.div key={index} variants={itemVariants}>
-                <Card className="group overflow-hidden rounded-xl border-none">
-                  <CardContent className="p-0">
-                    <div className="relative">
-                      <div className="relative h-64">
-                        <Image src={destination.image} alt={destination.title} className="object-cover transition-transform duration-300 group-hover:scale-110" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
-                      </div>
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4 text-white">
-                        <h3 className="text-xl font-semibold">{destination.title}</h3>
-                        <div className="mt-1 flex items-center space-x-2">
-                          <MapPin className="h-4 w-4" />
-                          <span className="text-sm">{destination.location}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-        </motion.section>
-
         <div>
           {/* Banner Card */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
@@ -153,6 +125,9 @@ export default function Home() {
               </div>
             </div>
           </motion.div>
+        </div>
+        <div className="container mx-auto px-4 py-12">
+          <PricingPlans />
         </div>
       </div>
       <Footer />

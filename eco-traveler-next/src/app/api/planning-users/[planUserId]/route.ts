@@ -1,22 +1,16 @@
 import { NextResponse } from "next/server";
 
 import { myResponse } from "../../plan/route";
-import {
-  updateStatusAccept,
-  updateStatusReject,
-} from "@/db/models/PlanningUser";
+import { updateStatusAccept, updateStatusReject } from "@/db/models/PlanningUser";
 import { deletePlan } from "@/db/models/Plan";
 
-export const PATCH = async (
-  req: Request,
-  { params }: { params: { planUserId: string } }
-) => {
+export const PATCH = async (req: Request, { params }: { params: { planUserId: string } }) => {
   try {
     const action = await req.json();
     if (!action) throw new Error("Action Required");
 
     let result;
-    if (action == "Accept") {
+    if (action == "Actived") {
       result = await updateStatusAccept(params.planUserId);
     } else {
       result = await updateStatusReject(params.planUserId);
@@ -42,10 +36,7 @@ export const PATCH = async (
   }
 };
 
-export const DELETE = async (
-  req: Request,
-  { params }: { params: { planUserId: string } }
-) => {
+export const DELETE = async (req: Request, { params }: { params: { planUserId: string } }) => {
   try {
     console.log(params, ">>>>>>>>>>>>>>>>>");
 

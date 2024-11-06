@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import { database } from "../config";
+import { PlanningUser } from "./PlanningUser";
 
 export type destination = {
   _id: ObjectId;
@@ -77,7 +78,20 @@ export type inputPlan = {
   startDate: string;
   endDate: string;
 };
-
+export type planDetail = {
+  _id: ObjectId;
+  userId?: string;
+  clerkId?: string;
+  name: string;
+  budget: string;
+  destination?: Inputdestination[];
+  hotel?: Inputhotel[];
+  transportation?: Inputtransportation[];
+  duration: number;
+  startDate: string;
+  endDate: string;
+  planningUsers: PlanningUser[];
+};
 // Function to get the Plan collection
 export const getPlanCollection = async () => {
   return database.collection("Plan");
@@ -117,5 +131,30 @@ export const createPlan = async (plan: inputPlan) => {
 export const getPlans = async (): Promise<plan[]> => {
   const Plan = await getPlanCollection();
   const result = (await Plan.find().toArray()) as plan[];
+  return result;
+};
+export const getPlan = async (clerkId: string): Promise<planDetail> => {
+  const Plan = await getPlanCollection();
+  const result = (await Plan.aggregate([
+    {
+      $match: { clerkId },
+    },
+    {
+      $lookup: {
+        from: "PlanningUsers",
+        localField: "_id",
+        foreignField: "planningId",
+        as: "planningUsers",
+      },
+    },
+  ]).toArray()) as unknown as planDetail;
+  return result;
+};
+
+export const deletePlan = async (id: string) => {
+  const Plan = await getPlanCollection();
+  console.log(id);
+
+  const result = await Plan.deleteOne({ _id: new ObjectId(id) });
   return result;
 };

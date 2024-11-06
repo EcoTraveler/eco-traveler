@@ -6,9 +6,7 @@ export async function POST(request: Request) {
     const { clerkId, tokens, freeToken } = await request.json();
     const findUser = await database.collection("SetToken").findOne({ clerkId });
     if (findUser) throw { message: "User already have token", status: 401 };
-    const setToken = await database
-      .collection("SetToken")
-      .insertOne({ clerkId, tokens, freeToken });
+    await database.collection("SetToken").insertOne({ clerkId, tokens, freeToken });
     return Response.json({ message: "set token success" });
   } catch (error) {
     return errHandler(error);
@@ -25,9 +23,7 @@ export async function GET(request: Request) {
       });
     }
 
-    const data = await database
-      .collection("SetToken")
-      .findOne({ clerkId: userId });
+    const data = await database.collection("SetToken").findOne({ clerkId: userId });
 
     if (!data) {
       return new Response(JSON.stringify({ error: "Data not found" }), {
@@ -49,13 +45,8 @@ export async function PATCH(request: Request) {
     const findUser = await database.collection("SetToken").findOne({ clerkId });
     if (!findUser) throw { message: "User Not Found", status: 401 };
     const tokenUser = findUser.tokens + tokens;
-    const setToken = await database
-      .collection("SetToken")
-      .updateOne({ clerkId }, { $set: { tokens: tokenUser } });
-    return new Response(
-      JSON.stringify({ message: "Tokens updated successfully" }),
-      { status: 200 }
-    );
+    await database.collection("SetToken").updateOne({ clerkId }, { $set: { tokens: tokenUser } });
+    return new Response(JSON.stringify({ message: "Tokens updated successfully" }), { status: 200 });
   } catch (error) {
     return errHandler(error);
   }
@@ -66,13 +57,9 @@ export async function PUT(request: Request) {
     const findUser = await database.collection("SetToken").findOne({ clerkId });
     if (!findUser) throw { message: "User Not Found", status: 401 };
     const tokenUser = findUser.tokens - tokens;
-    const setToken = await database
-      .collection("SetToken")
-      .updateOne({ clerkId }, { $set: { tokens: tokenUser } });
-    return new Response(
-      JSON.stringify({ message: "Tokens updated successfully" }),
-      { status: 200 }
-    );
+    if (tokenUser <= 0) throw { message: "run out of token", status: 401 };
+    await database.collection("SetToken").updateOne({ clerkId }, { $set: { tokens: tokenUser } });
+    return new Response(JSON.stringify({ message: "Tokens updated successfully" }), { status: 200 });
   } catch (error) {
     return errHandler(error);
   }

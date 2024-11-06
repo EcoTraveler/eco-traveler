@@ -28,3 +28,15 @@ export interface PlanningUser {
   status: string;
 }
 
+export interface Message {
+  id: string;
+  username: string;
+  content: string;
+  timestamp: string;
+}
+
+export interface User {
+  id: string;
+  username: string;
+}
+

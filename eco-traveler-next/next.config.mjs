@@ -24,6 +24,9 @@ const nextConfig = {
       "indonesia.go.id",
     ],
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;

@@ -69,7 +69,7 @@ export default function Home() {
                   AI trip builder
                 </motion.h1>
                 <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="max-w-[600px] text-lg md:text-xl">
-                  Get a whole getaway's worth of ideas made for you—ready in seconds.
+                  Get a whole getaway&apos;s worth of ideas made for you—ready in seconds.
                 </motion.p>
                 <Link href="/ai-recommendation">
                   <Button className="bg-green-500 hover:bg-green-600">Try it!</Button>

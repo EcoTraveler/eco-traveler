@@ -22,6 +22,7 @@ export default function TravelForm() {
   const [recommendations, setRecommendations] = useState<aiResult | null>(null);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [hasToken, setHasToken] = useState(true);
+  const [token, setToken] = useState(0);
 
   const clerkId = useUser();
   const userId = clerkId.user?.id;
@@ -34,6 +35,7 @@ export default function TravelForm() {
         console.log(data);
 
         if (status.ok) {
+          setToken(data?.tokens);
           setHasToken(data?.freeToken);
         }
       } catch (error) {
@@ -105,6 +107,21 @@ export default function TravelForm() {
       } else {
         setMessage({ type: "error", text: result.error || "Failed to create plan. Please try again." });
       }
+
+      const tokenResponse = await fetch("/api/setToken", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          clerkId: userId,
+          tokens: 1, // Assuming 1 token per recommendation
+        }),
+      });
+
+      if (!tokenResponse.ok) {
+        throw new Error("Failed to update tokens");
+      }
     } catch (error) {
       console.error("Error creating plan:", error);
       setMessage({ type: "error", text: "An unexpected error occurred. Please try again." });
@@ -117,7 +134,7 @@ export default function TravelForm() {
       {hasToken && (
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <p className="text-2xl font-semibold mb-6">You don't have any tokens.</p>
+            <p className="text-2xl font-semibold mb-6">You don&apos;t have any tokens.</p>
             <Button asChild className="px-6 py-3 text-lg bg-green-500 hover:bg-green-600">
               <a href="/paypal">Get 5 Free Tokens</a>
             </Button>
@@ -132,6 +149,7 @@ export default function TravelForm() {
               <CardHeader>
                 <CardTitle>Plan Your Trip</CardTitle>
                 <CardDescription>Fill in the details to get personalized travel recommendations.</CardDescription>
+                <div className="flex justify-center font-bold">My Token : {token}</div>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleRecommendation} className="space-y-4">

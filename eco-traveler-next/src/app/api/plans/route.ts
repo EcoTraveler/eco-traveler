@@ -1,8 +1,6 @@
-import { NextResponse } from 'next/server';
-import { database } from '@/db/config';
-import { ObjectId } from 'mongodb';
-import { getUserInfo } from "@/db/utils/clerkHelpers";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
+import { database } from "@/db/config";
+import { ObjectId } from "mongodb";
 
 export async function GET() {
   try {
@@ -17,14 +15,14 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const { planId, clerkId, name } = await request.json();
-    const planningUser = await database
-      .collection("PlanningUsers")
-      .findOne({ clerkId, planningId: planId });
 
+    // Check if the user is already joined
+    const planningUser = await database.collection("PlanningUsers").findOne({ clerkId, planningId: planId });
     if (planningUser) {
       return NextResponse.json({ message: "Already joined" }, { status: 400 });
     }
 
+    // If not joined, add the user to PlanningUsers
     await database.collection("PlanningUsers").insertOne({
       name: name,
       clerkId,
@@ -34,29 +32,23 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ message: "Joined successfully" });
   } catch (error) {
-    console.log(error);
-
+    console.error(error);
     const err = error as Error;
-    return NextResponse.json(
-      { error: err, message: "failed to join" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: err.message, message: "Failed to join" }, { status: 500 });
   }
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const userInfo = await getUserInfo(req);
-
-  if (req.method === "POST") {
-    const { name } = req.body;
-    const plan = { name, clerkId: userInfo.clerkId };
+// New function to create a plan
+export async function PUT(request: Request) {
+  try {
+    const { name, clerkId } = await request.json();
+    const plan = { name, clerkId };
 
     const result = await database.collection("Plan").insertOne(plan);
-    res.status(200).json({ planId: result.insertedId });
-  } else if (req.method === "GET") {
-    const plans = await database.collection("Plan").find({}).toArray();
-    res.status(200).json(plans);
-  } else {
-    res.status(405).json({ message: "Method not allowed" });
+    return NextResponse.json({ planId: result.insertedId });
+  } catch (error) {
+    console.error(error);
+    const err = error as Error;
+    return NextResponse.json({ error: err.message, message: "Failed to create plan" }, { status: 500 });
   }
 }

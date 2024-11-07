@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import { MapPin, Calendar, List, Camera, Sun, Loader2 } from "lucide-react";
+import { MapPin, Camera, Sun, Loader2 } from "lucide-react";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
